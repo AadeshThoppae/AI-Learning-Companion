@@ -1,0 +1,6 @@
+# Add to application.properties
+
+spring.application.name=ai-learning-companion
+langchain4j.google-ai-gemini.chat-model.api-key={API-KEY-HERE}
+langchain4j.google-ai-gemini.chat-model.model-name=gemini-2.5-flash
+
