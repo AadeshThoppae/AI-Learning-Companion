@@ -35,11 +35,10 @@ public class DocumentService {
             // Get the structured summary object from the AI
             Summary summaryObject = summarizer.summarize(document.text());
 
-            // Convert to JSON string
-            String jsonResponse = objectMapper.writeValueAsString(summaryObject);
-
-            return jsonResponse;
+            // Convert to JSON string and return
+            return objectMapper.writeValueAsString(summaryObject);
         } finally {
             Files.deleteIfExists(tempFile);
         }
+    }
 }
