@@ -1,7 +1,6 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.service;
 
 import com.aadeshandreas.ailearning.ai_learning_companion.model.Summary;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
@@ -17,14 +16,12 @@ import java.nio.file.Path;
 @Service
 public class DocumentService {
     private final Summarizer summarizer;
-    private final ObjectMapper objectMapper;
 
-    public DocumentService(ChatModel chatModel, ObjectMapper objectMapper) {
+    public DocumentService(ChatModel chatModel) {
         this.summarizer = AiServices.create(Summarizer.class, chatModel);
-        this.objectMapper = objectMapper;
     }
 
-    public String summarizePDF(MultipartFile pdfFile) throws Exception {
+    public Summary summarizePDF(MultipartFile pdfFile) throws Exception {
         // Load the document from the uploaded file
         Path tempFile = File.createTempFile("temp-", ".pdf").toPath();
         try {
@@ -32,11 +29,8 @@ public class DocumentService {
 
             Document document = FileSystemDocumentLoader.loadDocument(tempFile, new ApachePdfBoxDocumentParser());
 
-            // Get the structured summary object from the AI
-            Summary summaryObject = summarizer.summarize(document.text());
-
-            // Convert to JSON string and return
-            return objectMapper.writeValueAsString(summaryObject);
+            // Get the structured summary object from the AI and return it
+            return summarizer.summarize(document.text());
         } finally {
             Files.deleteIfExists(tempFile);
         }
