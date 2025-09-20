@@ -27,18 +27,19 @@ public class DocumentService {
     public String summarizePDF(MultipartFile pdfFile) throws Exception {
         // Load the document from the uploaded file
         Path tempFile = File.createTempFile("temp-", ".pdf").toPath();
-        pdfFile.transferTo(tempFile);
+        try {
+            pdfFile.transferTo(tempFile);
 
-        Document document = FileSystemDocumentLoader.loadDocument(tempFile, new ApachePdfBoxDocumentParser());
+            Document document = FileSystemDocumentLoader.loadDocument(tempFile, new ApachePdfBoxDocumentParser());
 
-        // Get the structured summary object from the AI
-        Summary summaryObject = summarizer.summarize(document.text());
+            // Get the structured summary object from the AI
+            Summary summaryObject = summarizer.summarize(document.text());
 
-        // Convert to JSON string
-        String jsonResponse = objectMapper.writeValueAsString(summaryObject);
+            // Convert to JSON string
+            String jsonResponse = objectMapper.writeValueAsString(summaryObject);
 
-        Files.delete(tempFile);
-
-        return jsonResponse;
-    }
+            return jsonResponse;
+        } finally {
+            Files.deleteIfExists(tempFile);
+        }
 }
