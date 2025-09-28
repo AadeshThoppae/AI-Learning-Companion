@@ -8,7 +8,7 @@ import dev.langchain4j.service.V;
  * An AI Service interface for creating structured summaries of text using LangChain4j.
  * This interface is designed to be implemented automatically by the AiServices factory.
  */
-public interface Summarizer {
+public interface Summarizer extends ContentGenerator<Summary> {
     /**
      * Generates a structured summary from the provided text.
      * The behavior of the summary is defined by the prompt in the @UserMessage annotation.
@@ -25,6 +25,7 @@ public interface Summarizer {
             
             Text: {{text}}
             """)
-    Summary summarize(@V("text") String text);
+    @Override
+    Summary generate(@V("text") String text);
 
 }

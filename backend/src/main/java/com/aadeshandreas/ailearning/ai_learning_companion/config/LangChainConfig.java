@@ -1,7 +1,10 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.config;
 
+import com.aadeshandreas.ailearning.ai_learning_companion.service.FlashcardGenerator;
+import com.aadeshandreas.ailearning.ai_learning_companion.service.Summarizer;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
+import dev.langchain4j.service.AiServices;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,6 +47,18 @@ public class LangChainConfig {
         return GoogleAiGeminiChatModel.builder()
                 .apiKey(apiKey)
                 .modelName(modelName)
+                .build();
+    }
+
+    @Bean
+    public Summarizer summarizer(ChatModel chatModel) {
+        return AiServices.create(Summarizer.class, chatModel);
+    }
+
+    @Bean
+    public FlashcardGenerator flashcardGenerator(ChatModel chatModel) {
+        return AiServices.builder(FlashcardGenerator.class)
+                .chatModel(chatModel)
                 .build();
     }
 }

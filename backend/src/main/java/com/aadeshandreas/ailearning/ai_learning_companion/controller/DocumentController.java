@@ -2,6 +2,7 @@ package com.aadeshandreas.ailearning.ai_learning_companion.controller;
 
 import com.aadeshandreas.ailearning.ai_learning_companion.model.ApiResponse;
 import com.aadeshandreas.ailearning.ai_learning_companion.model.ErrorResponse;
+import com.aadeshandreas.ailearning.ai_learning_companion.model.Flashcard;
 import com.aadeshandreas.ailearning.ai_learning_companion.model.Summary;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.DocumentService;
 import org.slf4j.Logger;
@@ -41,8 +42,26 @@ public class DocumentController {
     @PostMapping(value = "/summary", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse> uploadAndSummarize(@RequestParam("file")MultipartFile file) {
         try {
-            Summary summary = documentService.summarizePDF(file);
+            Summary summary = (Summary) documentService.generateContent(file, "summarizer");
             return ResponseEntity.ok(summary);
+        } catch (Exception e) {
+            // Log the detailed exception for debugging purposes on the server-side
+            logger.error("Error processing uploaded PDF", e);
+
+            // Return a generic, safe error response to the client
+            ErrorResponse errorResponse = new ErrorResponse(
+                    "Unable to process document",
+                    "DOCUMENT_PROCESSING_ERROR"
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @PostMapping(value = "/flashcards", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadAndGenerateFlashcard(@RequestParam("file")MultipartFile file) {
+        try {
+            Flashcard flashcards = (Flashcard) documentService.generateContent(file, "flashcardGenerator");
+            return ResponseEntity.ok(flashcards);
         } catch (Exception e) {
             // Log the detailed exception for debugging purposes on the server-side
             logger.error("Error processing uploaded PDF", e);
