@@ -50,15 +50,27 @@ public class LangChainConfig {
                 .build();
     }
 
+    /**
+     * Creates the {@link Summarizer} AI Service bean.
+     * LangChain4j will create a dynamic implementation of the Summarizer interface.
+     *
+     * @param chatModel The configured {@link ChatModel} bean to use for the AI calls.
+     * @return A ready-to-use instance of the Summarizer service.
+     */
     @Bean
     public Summarizer summarizer(ChatModel chatModel) {
         return AiServices.create(Summarizer.class, chatModel);
     }
 
+    /**
+     * Creates the {@link FlashcardGenerator} AI Service bean.
+     * LangChain4j will create a dynamic implementation of the FlashcardGenerator interface.
+     *
+     * @param chatModel The configured {@link ChatModel} bean to use for the AI calls.
+     * @return A ready-to-use instance of the FlashcardGenerator service.
+     */
     @Bean
     public FlashcardGenerator flashcardGenerator(ChatModel chatModel) {
-        return AiServices.builder(FlashcardGenerator.class)
-                .chatModel(chatModel)
-                .build();
+        return AiServices.create(FlashcardGenerator.class, chatModel);
     }
 }

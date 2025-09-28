@@ -1,9 +1,6 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.controller;
 
-import com.aadeshandreas.ailearning.ai_learning_companion.model.ApiResponse;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.ErrorResponse;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Flashcard;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Summary;
+import com.aadeshandreas.ailearning.ai_learning_companion.model.*;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.DocumentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,16 +54,20 @@ public class DocumentController {
         }
     }
 
+    /**
+     * Handles the HTTP POST request to upload a PDF file and generate a list of flashcards.
+     *
+     * @param file The PDF file uploaded by the client in a multipart/form-data request.
+     * @return A {@link ResponseEntity} containing a List of {@link Flashcard} objects on success,
+     * or an {@link ErrorResponse} on failure.
+     */
     @PostMapping(value = "/flashcards", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadAndGenerateFlashcard(@RequestParam("file")MultipartFile file) {
+    public ResponseEntity<ApiResponse> uploadAndGenerateFlashcard(@RequestParam("file")MultipartFile file) {
         try {
-            Flashcard flashcards = (Flashcard) documentService.generateContent(file, "flashcardGenerator");
-            return ResponseEntity.ok(flashcards);
+            FlashcardList flashcardList = (FlashcardList) documentService.generateContent(file, "flashcardGenerator");
+            return ResponseEntity.ok(flashcardList);
         } catch (Exception e) {
-            // Log the detailed exception for debugging purposes on the server-side
             logger.error("Error processing uploaded PDF", e);
-
-            // Return a generic, safe error response to the client
             ErrorResponse errorResponse = new ErrorResponse(
                     "Unable to process document",
                     "DOCUMENT_PROCESSING_ERROR"
