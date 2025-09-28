@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Setter
 @Getter
-public class FlashcardList implements ApiResponse {
+public class FlashcardList {
     private List<Flashcard> flashcards;
 
     /**
@@ -27,6 +27,8 @@ public class FlashcardList implements ApiResponse {
      *
      * @param list The list of flashcards to wrap.
      */
-    public FlashcardList(List<Flashcard> list) { this.flashcards = list; }
+    public FlashcardList(List<Flashcard> list) {
+        this.flashcards = list;
+    }
 
 }

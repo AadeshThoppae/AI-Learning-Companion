@@ -14,7 +14,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Flashcard implements ApiResponse {
+public class Flashcard {
     private int id;
     private String question;
     private String answer;

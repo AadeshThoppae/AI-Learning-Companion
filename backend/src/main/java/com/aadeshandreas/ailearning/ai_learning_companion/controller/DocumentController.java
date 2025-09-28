@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 /**
  * REST controller that defines API endpoints for document processing,
  * such as uploading and summarizing PDF files.
@@ -29,48 +31,83 @@ public class DocumentController {
         this.documentService = documentService;
     }
 
-    /**
-     * Handles the HTTP POST request to upload a PDF file and generate a structured summary.
-     *
-     * @param file The PDF file uploaded by the client in a multipart/form-data request.
-     * @return A {@link ResponseEntity} containing a {@link Summary} object on success (HTTP 200 OK),
-     * or an {@link ErrorResponse} on failure (HTTP 500 Internal Server Error).
-     */
-    @PostMapping(value = "/summary", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse> uploadAndSummarize(@RequestParam("file")MultipartFile file) {
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<?>> uploadDocument(@RequestParam("file") MultipartFile file) {
         try {
-            Summary summary = (Summary) documentService.generateContent(file, "summarizer");
-            return ResponseEntity.ok(summary);
-        } catch (Exception e) {
-            // Log the detailed exception for debugging purposes on the server-side
-            logger.error("Error processing uploaded PDF", e);
+            documentService.uploadDocument(file);
+            return ResponseEntity.ok(new ApiResponse<>("Success", "200_OK", null));
+        } catch (IOException e) {
+            logger.error(e.getMessage());
 
-            // Return a generic, safe error response to the client
-            ErrorResponse errorResponse = new ErrorResponse(
+            ApiResponse<Void> errorResponse = new ApiResponse<>("Unable to upload document", "DOCUMENT_UPLOAD_ERROR", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    /**
+     * Generates a structured summary from the document previously uploaded in the user's session.
+     *
+     * @return A {@link ResponseEntity} wrapping a generic {@link ApiResponse}. On success,
+     * the ApiResponse's data field will contain a {@link Summary} object. On failure,
+     * it will contain an error message and code with null data.
+     */
+    @PostMapping(value = "/summary")
+    public ResponseEntity<ApiResponse<?>> uploadAndSummarize() {
+        try {
+            Summary summary = (Summary) documentService.generateContent("summarizer");
+            ApiResponse<Summary> successResponse = new ApiResponse<>("Success", "200_OK", summary);
+            return ResponseEntity.ok(successResponse);
+        } catch (IllegalStateException e) {
+            logger.warn("Summary generation failed because no document was uploaded: {}", e.getMessage());
+
+            ApiResponse<Void> errorResponse = new ApiResponse<>(
+                    "No document found. Please upload a document first.",
+                    "NO_DOCUMENT_UPLOADED",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred during summary generation", e);
+
+            ApiResponse<Void> errorResponse = new ApiResponse<>(
                     "Unable to process document",
-                    "DOCUMENT_PROCESSING_ERROR"
+                    "INTERNAL_SERVER_ERROR",
+                    null
             );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
     /**
-     * Handles the HTTP POST request to upload a PDF file and generate a list of flashcards.
+     * Generates a list of flashcards from the document previously uploaded in the user's session.
      *
-     * @param file The PDF file uploaded by the client in a multipart/form-data request.
-     * @return A {@link ResponseEntity} containing a List of {@link Flashcard} objects on success,
-     * or an {@link ErrorResponse} on failure.
+     * @return A {@link ResponseEntity} wrapping a generic {@link ApiResponse}. On success,
+     * the ApiResponse's data field will contain a {@link FlashcardList} object. On failure,
+     * it will contain an error message and code with null data.
      */
-    @PostMapping(value = "/flashcards", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse> uploadAndGenerateFlashcard(@RequestParam("file")MultipartFile file) {
+    @PostMapping(value = "/flashcards")
+    public ResponseEntity<ApiResponse<?>> uploadAndGenerateFlashcard() {
         try {
-            FlashcardList flashcardList = (FlashcardList) documentService.generateContent(file, "flashcardGenerator");
-            return ResponseEntity.ok(flashcardList);
+            FlashcardList flashcardList = (FlashcardList) documentService.generateContent("flashcardGenerator");
+            ApiResponse<FlashcardList> successResponse = new ApiResponse<>("Success", "200_OK", flashcardList);
+            return ResponseEntity.ok(successResponse);
+        } catch (IllegalStateException e) {
+            logger.warn("Flashcard generation failed because no document was uploaded: {}", e.getMessage());
+
+            ApiResponse<Void> errorResponse = new ApiResponse<>(
+                    "No document found. Please upload a document first.",
+                    "NO_DOCUMENT_UPLOADED",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         } catch (Exception e) {
             logger.error("Error processing uploaded PDF", e);
-            ErrorResponse errorResponse = new ErrorResponse(
+
+            ApiResponse<Void> errorResponse = new ApiResponse<>(
                     "Unable to process document",
-                    "DOCUMENT_PROCESSING_ERROR"
+                    "INTERNAL_SERVER_ERROR",
+                    null
             );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }

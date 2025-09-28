@@ -1,10 +1,22 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.model;
 
 /**
- * A marker interface for all API response models.
+ * A generic wrapper class for all API responses, implementing the "envelope" pattern.
  * <p>
- * Implementing this interface allows classes like {@link Summary} and {@link ErrorResponse}
- * to be treated as a common type. This is useful for methods or controllers that can
- * return different kinds of responses (e.g., a success object or an error object).
+ * This class standardizes the structure of responses from the server. Every response,
+ * whether success or error, will be wrapped in this object, providing a consistent
+ * format for the client to parse.
+ *
+ * @param <T> The type of the data payload being sent in the response.
  */
-public interface ApiResponse {}
+public record ApiResponse<T>(String message, String code, T data) {
+    /**
+     * Constructs a new ApiResponse.
+     *
+     * @param message A human-readable message describing the result of the operation.
+     * @param code    A machine-readable code representing the status.
+     * @param data    The data payload to be included in the response.
+     */
+    public ApiResponse {
+    }
+}

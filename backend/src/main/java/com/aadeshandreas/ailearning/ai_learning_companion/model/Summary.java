@@ -15,8 +15,7 @@ import java.util.List;
  */
 @Setter
 @Getter
-public class Summary implements ApiResponse {
+public class Summary {
     private String title;
     private List<String> keyPoints;
-
 }
