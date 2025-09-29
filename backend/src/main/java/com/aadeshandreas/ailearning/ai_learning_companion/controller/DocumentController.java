@@ -54,7 +54,7 @@ public class DocumentController {
     @PostMapping(value = "/summary")
     public ResponseEntity<ApiResponse<?>> uploadAndSummarize() {
         try {
-            Summary summary = (Summary) documentService.generateContent("summarizer");
+            Summary summary = documentService.generateSummary();
             ApiResponse<Summary> successResponse = new ApiResponse<>("Success", "200_OK", summary);
             return ResponseEntity.ok(successResponse);
         } catch (IllegalStateException e) {
@@ -89,7 +89,7 @@ public class DocumentController {
     @PostMapping(value = "/flashcards")
     public ResponseEntity<ApiResponse<?>> uploadAndGenerateFlashcard() {
         try {
-            FlashcardList flashcardList = (FlashcardList) documentService.generateContent("flashcardGenerator");
+            FlashcardList flashcardList = documentService.generateFlashcards();
             ApiResponse<FlashcardList> successResponse = new ApiResponse<>("Success", "200_OK", flashcardList);
             return ResponseEntity.ok(successResponse);
         } catch (IllegalStateException e) {
