@@ -67,7 +67,7 @@ public class DocumentService {
      * @throws IOException  if there is an error reading or parsing the file.
      */
     public void uploadDocument(MultipartFile pdfFile) throws IOException {
-        /// Create a temporary file to store the uploaded content for parsing.
+        // Create a temporary file to store the uploaded content for parsing.
         Path tempFile = File.createTempFile("temp-", ".pdf").toPath();
         try {
             // Transfer the uploaded file's content to the temporary file.
