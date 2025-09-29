@@ -84,7 +84,7 @@ export default function Home() {
                             />
                         </div>
 
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-3">
                             <div className="text-sm text-gray-500 dark:text-gray-400">
                                 {notes.length} characters
                             </div>
