@@ -31,6 +31,16 @@ public class DocumentController {
         this.documentService = documentService;
     }
 
+    /**
+     * Handles the HTTP POST request to upload a PDF document. The document's text is
+     * extracted and stored in the user's session for subsequent processing, such as
+     * generating summaries or flashcards.
+     *
+     * @param file The PDF file uploaded by the client as part of a multipart/form-data request.
+     * @return A {@link ResponseEntity} wrapping a generic {@link ApiResponse}. On successful upload,
+     * it returns a 200 OK status with a success message. If an {@link IOException}
+     * occurs during file processing, it returns a 500 Internal Server Error with an error message.
+     */
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<?>> uploadDocument(@RequestParam("file") MultipartFile file) {
         try {
