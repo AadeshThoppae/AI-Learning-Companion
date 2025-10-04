@@ -2,6 +2,7 @@ package com.aadeshandreas.ailearning.ai_learning_companion.controller;
 
 import com.aadeshandreas.ailearning.ai_learning_companion.model.*;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.DocumentService;
+import com.aadeshandreas.ailearning.ai_learning_companion.service.TextUploadRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -50,6 +51,30 @@ public class DocumentController {
             logger.error(e.getMessage());
 
             ApiResponse<Void> errorResponse = new ApiResponse<>("Unable to upload document", "DOCUMENT_UPLOAD_ERROR", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    public ResponseEntity<ApiResponse<?>> uploadText(@RequestBody TextUploadRequest request){
+        try {
+            if(request.text() == null || request.text().trim().isEmpty()){
+                ApiResponse<Void> errorResponse = new ApiResponse<>(
+                        "Text cannot be empty",
+                        "INVALID_INPUT",
+                        null
+                );
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+            }
+            documentService.uploadText(request.text());
+            return ResponseEntity.ok(new ApiResponse<>("Success", "200_OK", null));
+        }catch (Exception e){
+            logger.error("Error processing text upload" , e);
+
+            ApiResponse<Void> errorResponse = new ApiResponse<>(
+                    "Unable to process text",
+                    "TEXT_UPLOAD_ERROR",
+                    null
+            );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }

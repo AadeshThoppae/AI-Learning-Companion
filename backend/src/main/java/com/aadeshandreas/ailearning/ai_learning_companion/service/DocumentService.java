@@ -83,6 +83,26 @@ public class DocumentService {
             Files.deleteIfExists(tempFile);
         }
     }
+    /**
+     * Accepts raw text input and stores it in the current session's repository
+     * clears previously stored summaries/flashcards
+     * @param text raw text tha's provided by user
+     */
+    public void uploadText(String text){
+        if(text == null || text.trim().isEmpty()){
+            throw new IllegalArgumentException("Text cannot be empty");
+        }
+
+        documentRepository.setDocumentText(text.trim());
+        clearCache();
+    }
+    /**
+     * clears cahced summaries/flashcards so when new content is uploaded, we get a fresh AI generation
+     */
+    private void clearCache() {
+        summaryRepository.setSummary(null);
+        flashcardRepository.setFlashcardList(null);
+    }
 
     /**
      * Generates a summary from the currently stored document, using a cache to avoid repeat AI calls.
