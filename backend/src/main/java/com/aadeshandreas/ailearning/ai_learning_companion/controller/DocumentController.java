@@ -68,20 +68,13 @@ public class DocumentController {
  *         it returns a 200 OK status with a success message. If the text is invalid,
  *         it returns a 400 Bad Request. Unexpected errors result in a 500 Internal Server Error.
  */
-    public ResponseEntity<ApiResponse<?>> uploadText(@RequestBody TextUploadRequest request){
+    @PostMapping(value = "/upload-text")
+    public ResponseEntity<ApiResponse<?>> uploadText(@Valid @RequestBody DocumentText documentText){
         try {
-            if(request.text() == null || request.text().trim().isEmpty()){
-                ApiResponse<Void> errorResponse = new ApiResponse<>(
-                        "Text cannot be empty",
-                        "INVALID_INPUT",
-                        null
-                );
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-            }
-            documentService.uploadText(request.text());
+            documentService.uploadText(documentText.text());
             return ResponseEntity.ok(new ApiResponse<>("Success", "200_OK", null));
-        }catch (Exception e){
-            logger.error("Error processing text upload" , e);
+        } catch (Exception e){
+            logger.error("Error processing text upload", e);
 
             ApiResponse<Void> errorResponse = new ApiResponse<>(
                     "Unable to process text",
