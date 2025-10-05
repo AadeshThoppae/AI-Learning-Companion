@@ -89,10 +89,6 @@ public class DocumentService {
      * @param text raw text tha's provided by user
      */
     public void uploadText(String text){
-        if(text == null || text.trim().isEmpty()){
-            throw new IllegalArgumentException("Text cannot be empty");
-        }
-
         documentRepository.setDocumentText(text.trim());
         clearCache();
     }
