@@ -2,7 +2,7 @@ package com.aadeshandreas.ailearning.ai_learning_companion.controller;
 
 import com.aadeshandreas.ailearning.ai_learning_companion.model.*;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.DocumentService;
-import com.aadeshandreas.ailearning.ai_learning_companion.service.TextUploadRequest;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
