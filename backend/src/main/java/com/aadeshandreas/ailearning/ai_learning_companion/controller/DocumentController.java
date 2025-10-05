@@ -2,6 +2,7 @@ package com.aadeshandreas.ailearning.ai_learning_companion.controller;
 
 import com.aadeshandreas.ailearning.ai_learning_companion.model.*;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.DocumentService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -50,6 +51,36 @@ public class DocumentController {
             logger.error(e.getMessage());
 
             ApiResponse<Void> errorResponse = new ApiResponse<>("Unable to upload document", "DOCUMENT_UPLOAD_ERROR", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+/**
+ * Handles the HTTP POST request to upload raw text content for processing.
+ * The uploaded text is wrapped in a {@link DocumentText} model and stored
+ * in the user's session for further operations, such as generating summaries
+ * or flashcards.
+ *
+ * <p>Validation is performed by the {@link DocumentText} model itself;
+ * empty or null text will trigger an {@link IllegalArgumentException}.</p>
+ *
+ * @param documentText The {@link DocumentText} object containing the text input.
+ * @return A {@link ResponseEntity} wrapping a generic {@link ApiResponse}. On success,
+ *         it returns a 200 OK status with a success message. If the text is invalid,
+ *         it returns a 400 Bad Request. Unexpected errors result in a 500 Internal Server Error.
+ */
+    @PostMapping(value = "/upload-text")
+    public ResponseEntity<ApiResponse<?>> uploadText(@Valid @RequestBody DocumentText documentText){
+        try {
+            documentService.uploadText(documentText.text());
+            return ResponseEntity.ok(new ApiResponse<>("Success", "200_OK", null));
+        } catch (Exception e){
+            logger.error("Error processing text upload", e);
+
+            ApiResponse<Void> errorResponse = new ApiResponse<>(
+                    "Unable to process text",
+                    "TEXT_UPLOAD_ERROR",
+                    null
+            );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
