@@ -54,7 +54,20 @@ public class DocumentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
-
+/**
+ * Handles the HTTP POST request to upload raw text content for processing.
+ * The uploaded text is wrapped in a {@link DocumentText} model and stored
+ * in the user's session for further operations, such as generating summaries
+ * or flashcards.
+ *
+ * <p>Validation is performed by the {@link DocumentText} model itself;
+ * empty or null text will trigger an {@link IllegalArgumentException}.</p>
+ *
+ * @param documentText The {@link DocumentText} object containing the text input.
+ * @return A {@link ResponseEntity} wrapping a generic {@link ApiResponse}. On success,
+ *         it returns a 200 OK status with a success message. If the text is invalid,
+ *         it returns a 400 Bad Request. Unexpected errors result in a 500 Internal Server Error.
+ */
     public ResponseEntity<ApiResponse<?>> uploadText(@RequestBody TextUploadRequest request){
         try {
             if(request.text() == null || request.text().trim().isEmpty()){
