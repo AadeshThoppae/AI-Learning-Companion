@@ -46,7 +46,7 @@ export default function Home() {
             const response = await fetch (`${API_BASE_URL}/api/documents/upload-text`,{
                 method: 'POST',
                 headers: {
-                    'Content_Type': 'application/json',
+                    ‘Content-Type': 'application/json',
                 },
                 body: JSON.stringify({text: notes}),
                 credentials: 'include',
