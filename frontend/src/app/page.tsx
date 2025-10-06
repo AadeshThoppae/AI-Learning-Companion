@@ -81,7 +81,7 @@ export default function Home() {
                 credentials: 'include',
             });
 
-            const res: ApiResponse<null> =await response.json();
+            const res: ApiResponse<null> = await response.json();
             if(!response.ok){
                 throw new Error(res.message || 'Failed to upload PDF');
             }
@@ -93,11 +93,11 @@ export default function Home() {
         }
     }
 
-    const handleNotesSubmit = () => {
+    const handleNotesSubmit = async () => {
         if(uploadMode === 'text'){
-            handleTextUpload();
+            await handleTextUpload();
         }else{
-            handlePDFUpload();
+            await handlePDFUpload();
         }
     }
     const handleGenerateSummary = async () => {
@@ -107,7 +107,7 @@ export default function Home() {
 
         try {
             const response = await fetch(`${API_BASE_URL}/api/documents/summary`, {
-                method: 'POST',
+                method: 'GET',
                 credentials: 'include',
             });
 
@@ -132,7 +132,7 @@ export default function Home() {
 
         try {
             const response = await fetch(`${API_BASE_URL}/api/documents/flashcards`, {
-                method: 'POST',
+                method: 'GET',
                 credentials: 'include',
             });
             const result: ApiResponse<FlashcardList> = await response.json();

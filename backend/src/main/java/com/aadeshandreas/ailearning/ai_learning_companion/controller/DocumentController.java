@@ -92,7 +92,7 @@ public class DocumentController {
      * the ApiResponse's data field will contain a {@link Summary} object. On failure,
      * it will contain an error message and code with null data.
      */
-    @PostMapping(value = "/summary")
+    @GetMapping(value = "/summary")
     public ResponseEntity<ApiResponse<?>> uploadAndSummarize() {
         try {
             Summary summary = documentService.generateSummary();
@@ -127,7 +127,7 @@ public class DocumentController {
      * the ApiResponse's data field will contain a {@link FlashcardList} object. On failure,
      * it will contain an error message and code with null data.
      */
-    @PostMapping(value = "/flashcards")
+    @GetMapping(value = "/flashcards")
     public ResponseEntity<ApiResponse<?>> uploadAndGenerateFlashcard() {
         try {
             FlashcardList flashcardList = documentService.generateFlashcards();
