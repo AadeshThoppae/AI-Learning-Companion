@@ -104,7 +104,7 @@ export default function UploadTab({
                     setUploadMode('text');
                     setError('');
                 }} className={`px-6 py-2 rounded-md font-medium transition-all ${
-                    uploadMode === 'text' ? 'bg-white dark:bg-gray-600 shadow-md': 'text-gray-600 dark:text-gray-300'
+                    uploadMode === 'text' ? 'bg-white dark:bg-gray-600 shadow-md': 'text-gray-600 dark:text-gray-300 cursor-pointer '
                 }`}>
                     Paste Text 📝
                 </button>
@@ -115,7 +115,7 @@ export default function UploadTab({
                     }} className={`px-6 py-2 rounded-md font-medium transition-all ${
                         uploadMode === 'pdf'
                             ? 'bg-white dark:bg-gray-600 shadow-md'
-                            : 'text-gray-600 dark:text-gray-300'
+                            : 'text-gray-600 dark:text-gray-300 cursor-pointer'
                     }`}
                 >
                     Upload PDF 📄
@@ -178,7 +178,7 @@ export default function UploadTab({
             <div className="flex items-center justify-between gap-3">
                 <button
                     onClick={handleReset}
-                    className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                     disabled={isLoading}
                 >
                     Clear
@@ -186,7 +186,7 @@ export default function UploadTab({
                 <button
                     onClick={handleNotesSubmit}
                     disabled={isLoading}
-                    className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105"
+                    className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 cursor-pointer"
                 >
                     {isLoading ? 'Processing...' : 'Generate Summary'}
                 </button>
