@@ -1,12 +1,14 @@
 'use client'
 
+import ErrorToast from "@/components/ErrorToast";
 import FlashcardTab from "@/components/tabs/FlashcardTab";
 import SummaryTab from "@/components/tabs/SummaryTab";
 import Tabs from "@/components/tabs/Tabs";
 import UploadTab from "@/components/tabs/UploadTab";
 import { getFlashcards } from "@/services/documentService";
 import { FlashcardList, Summary } from "@/types/documentTypes";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import { AiOutlineClose } from 'react-icons/ai';
 
 
 export default function Home() {
@@ -31,9 +33,11 @@ export default function Home() {
         setError('');
 
     }
-
     return (
     <div className="font-sans items-center justify-items-center min-h-screen p-8 gap-16">
+        {error && (
+            <ErrorToast message={error} onClose={() => setError('')} />
+        )}
       <div className="container mx-auto px-4">
           <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
@@ -62,6 +66,9 @@ export default function Home() {
                 <SummaryTab
                     summary={summary}
                     isLoading={isLoading}
+                    setSummary={setSummary}
+                    setIsLoading={setIsLoading}
+                    setError={setError}
                     handleReset={handleReset}
                 />
             )}

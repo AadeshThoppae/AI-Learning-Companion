@@ -1,14 +1,42 @@
 'use client'
 
+import { getSummary } from "@/services/documentService";
 import { Summary } from "@/types/documentTypes";
+import { useEffect } from "react";
 
 interface SummaryTabProps {
     summary: Summary | null;
     isLoading: boolean;
+    setSummary: (summary: Summary | null) => void;
+    setIsLoading: (loading: boolean) => void;
+    setError: (error: string) => void;
     handleReset: () => void;
 }
 
-export default function SummaryTab({ summary, isLoading, handleReset }: SummaryTabProps) {
+export default function SummaryTab({ summary, isLoading, setSummary, setIsLoading, setError, handleReset }: SummaryTabProps) {
+
+    // Fetch summary on load
+    useEffect(() => {
+        if (summary) return; // If summary already exists, do not fetch again
+
+        const fetchSummary = async () => {
+            setIsLoading(true);
+            try {
+                const existingSummary = await getSummary(); // Your API call
+                if (existingSummary) {
+                    setSummary(existingSummary.data);
+                }
+            } catch (err) {
+                console.error("Failed to fetch summary:", err);
+                setError('Could not load existing summary.');
+            } finally {
+                setIsLoading(false);
+            }
+        }
+
+        fetchSummary();
+    }, [setError, setIsLoading, setSummary, summary]);
+
     return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8">
         <div className="flex items-center justify-between mb-6">
