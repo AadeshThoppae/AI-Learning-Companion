@@ -34,7 +34,7 @@ export default function Home() {
 
     }
     return (
-    <div className="font-sans items-center justify-items-center min-h-screen p-8 gap-16">
+    <div className="font-sans items-center justify-items-center min-h-screen p-8 gap-16 w-full">
         {error && (
             <ErrorToast message={error} onClose={() => setError('')} />
         )}
@@ -46,7 +46,7 @@ export default function Home() {
           </div>
       </div>
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs}/>
-        <div className="max-w-4xl mx-auto">
+        <div className="mx-auto w-full">
             {activeTab === 'upload' && (
                 <UploadTab
                     notes={notes} 
@@ -78,7 +78,6 @@ export default function Home() {
                     flashcards={flashcards}
                     handleReset={handleReset}
                     setFlashcards={setFlashcards}
-                    setIsLoading={setIsLoading}
                     setError={setError}
                     setActiveTab={setActiveTab}
                 />

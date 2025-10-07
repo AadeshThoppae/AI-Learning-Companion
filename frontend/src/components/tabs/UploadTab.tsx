@@ -93,7 +93,7 @@ export default function UploadTab({
     };
 
     return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 w-2/3 mx-auto">
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">
             Upload Your Notes
         </h2>
@@ -166,8 +166,8 @@ export default function UploadTab({
                         <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                             <div className="flex items-center gap-2">
                                 <span className="text-sm text-gray-700 dark:text-gray-300">
-                                        {file.name}
-                                    </span>
+                                    {file.name}
+                                </span>
                             </div>
                         </div>
                     )}

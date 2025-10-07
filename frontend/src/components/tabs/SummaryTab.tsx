@@ -38,7 +38,7 @@ export default function SummaryTab({ summary, isLoading, setSummary, setIsLoadin
     }, [setError, setIsLoading, setSummary, summary]);
 
     return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 mx-auto w-2/3">
         <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
                 AI-Generated Summary
