@@ -14,6 +14,7 @@ interface SummaryTabProps {
     setSummary: (summary: Summary | null) => void;
     setIsLoading: (loading: boolean) => void;
     setError: (error: string) => void;
+    setActiveTab: (tab: string) => void;
     handleReset: () => void;
 }
 
@@ -24,7 +25,7 @@ interface SummaryTabProps {
  * @param props - The component props containing summary data and state management functions
  * @returns JSX element containing the summary interface with key points and action buttons
  */
-export default function SummaryTab({ summary, isLoading, setSummary, setIsLoading, setError, handleReset }: SummaryTabProps) {
+export default function SummaryTab({ summary, isLoading, setSummary, setIsLoading, setError, setActiveTab, handleReset }: SummaryTabProps) {
 
     // Fetch summary on load
     useEffect(() => {
@@ -90,7 +91,9 @@ export default function SummaryTab({ summary, isLoading, setSummary, setIsLoadin
 
                 {/* Action buttons for other learning modes */}
                 <div className="mt-8 flex gap-4">
-                    <button className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 cursor-pointer">
+                    <button className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg
+                        hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 cursor-pointer"
+                        onClick={() => setActiveTab('flashcards')}>
                         Generate Flashcards
                     </button>
                     <button className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 cursor-pointer">

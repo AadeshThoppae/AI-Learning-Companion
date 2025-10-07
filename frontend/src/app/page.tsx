@@ -84,10 +84,11 @@ export default function Home() {
                     setSummary={setSummary}
                     setIsLoading={setIsLoading}
                     setError={setError}
+                    setActiveTab={setActiveTab}
                     handleReset={handleReset}
                 />
             )}
-            
+
             {/* Flashcards Tab */}
             {activeTab === 'flashcards' && (
                 <FlashcardTab

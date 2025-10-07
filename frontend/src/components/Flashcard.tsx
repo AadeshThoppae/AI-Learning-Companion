@@ -43,6 +43,7 @@ export default function Flashcard({ flashcard, score, currentIndex, setScore, se
         e.stopPropagation();
         
         handleFlip(); // Flip back to question side
+        setShowHint(false); // Hide hint for next card
         
         setTimeout(() => {
             setScore({
@@ -54,7 +55,7 @@ export default function Flashcard({ flashcard, score, currentIndex, setScore, se
     }
 
     return (
-        <button className="w-xl h-96 outline-none perspective-[1000px]" onClick={handleFlip}>
+        <div className="w-xl h-96 outline-none perspective-[1000px]" onClick={handleFlip}>
             <div className={`relative size-full transition duration-500 transform-3d ease`} style={{ transform: `rotateX(${rotationDegrees}deg)` }}>
                 {/* Front side - Question */}
                 <div className="absolute inset-0 size-full backface-hidden bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-l-4 border-blue-500
@@ -87,8 +88,8 @@ export default function Flashcard({ flashcard, score, currentIndex, setScore, se
                     text-white shadow-lg mb-4 hover:scale-[1.02] transition-transform cursor-pointer flex flex-col justify-around items-center">
                     <h3 className="text-2xl font-semibold text-gray-800 dark:text-white mb-2 text-center">{flashcard.answer}</h3>
                     <div className="flex flex-col items-center gap-4 font-semibold">
-                        Did you get it right?
                         {/* Self-assessment buttons */}
+                        <span className="text-gray-700 dark:text-gray-300">Did you get it right?</span>
                         <div className="flex gap-4 w-96 justify-around">
                             <button className="flex justify-center font-semibold gap-2 w-1/3 py-2 opacity-70 bg-gradient-to-r 
                                 from-purple-500 to-pink-600 text-white rounded-lg hover:opacity-100 hover:from-purple-600 hover:to-pink-700 
@@ -108,6 +109,6 @@ export default function Flashcard({ flashcard, score, currentIndex, setScore, se
                     </div>
                 </div>
             </div>
-        </button>
+        </div>
     );
 }
