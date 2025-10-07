@@ -15,30 +15,9 @@ interface FlashcardTabProps {
 
 export default function FlashcardTab({ flashcards, setFlashcards, handleReset, setError, setActiveTab }: FlashcardTabProps) {
     const [isLoading, setIsLoading] = useState(false);
-    const [score, setScore] = useState<{ incorrect: number; correct: number; }>({ incorrect: 0, correct: 0 });
+    const [score, setScore] = useState<{ incorrect: FlashcardType[]; correct: number; }>({ incorrect: [], correct: 0 });
     const [currentIndex, setCurrentIndex] = useState(0);
-
-    // Fetch Flashcards on load
-        /* useEffect(() => {
-            if (flashcards) return;
-    
-            const fetchFlashcards = async () => {
-                setIsLoading(true);
-                try {
-                    const existingFlashcards = await getFlashcards(); // Your API call
-                    if (existingFlashcards) {
-                        setFlashcards(existingFlashcards.data);
-                    }
-                } catch (err) {
-                    console.error("Failed to fetch flashcards:", err);
-                    setError('Could not load existing flashcards.');
-                } finally {
-                    setIsLoading(false);
-                }
-            }
-    
-            fetchFlashcards();
-        }, [setError, setIsLoading, setFlashcards, flashcards]); */
+    const [currentFlashcards, setCurrentFlashcards] = useState<FlashcardType[] | null>(flashcards);
 
     const handleGenerateFlashcards = async () => {
         setIsLoading(true);
@@ -48,11 +27,25 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
         try {
             const result = await getFlashcards();
             setFlashcards(result.data?.flashcards);
+            setCurrentFlashcards(result.data?.flashcards);
         }catch(e){
             setError(e instanceof Error ? e.message: "failed to generate flashcards");
         }finally {
             setIsLoading(false);
         }
+    }
+
+    const handleResetFlashcards = () => {
+        setScore({ incorrect: [], correct: 0 });
+        setCurrentFlashcards(flashcards);
+        setCurrentIndex(0);
+    }
+
+    const handleLearningCards = () => {
+        if (!currentFlashcards) return;
+        setCurrentFlashcards(score.incorrect);
+        setScore({ incorrect: [], correct: 0 });
+        setCurrentIndex(0);
     }
 
     return (
@@ -76,19 +69,19 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
                             Loading ...
                         </span>
                 </div>
-            ) : flashcards && flashcards ? (
+            ) : currentFlashcards ? (
                 <div className="flex flex-col items-center justify-center">
                     {/* Score board */}
                     <div className="grid grid-cols-3 w-xl items-center mb-4 text-center text-gray-700 dark:text-gray-300 font-semibold text-sm">
                         <div className="flex gap-2 text-orange-400 items-center justify-start">
                             <div className="px-3 border-orange-400 border-1 rounded-full text-sm leading-6">
-                                {score.incorrect} 
+                                {score.incorrect.length} 
                             </div>
                             Still Learning
                         </div>
                         {/* Progress indicator - centered */}
                         <div className="text-sm text-gray-600 dark:text-gray-400">
-                            Card {currentIndex + 1 < flashcards.length ? currentIndex + 1 : currentIndex} of {flashcards.length}
+                            Card {currentIndex + 1 <= currentFlashcards.length ? currentIndex + 1 : currentIndex} of {currentFlashcards.length}
                         </div>
                         <div className="flex gap-2 text-green-400 items-center justify-end">
                             Mastered
@@ -99,8 +92,8 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
                     </div>
                     
                     {/* Current Flashcard */}
-                    {currentIndex < flashcards.length ? (
-                        <Flashcard flashcard={flashcards[currentIndex]} score={score} setScore={setScore} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
+                    {currentIndex < currentFlashcards.length ? (
+                        <Flashcard flashcard={currentFlashcards[currentIndex]} score={score} setScore={setScore} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
                     ) : (
                         <div className="w-full text-center py-12 gap-4 flex flex-col items-center justify-center">
                             <p className="text-gray-500 dark:text-gray-400">
@@ -108,12 +101,19 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
                             </p>
                             <div className="flex gap-8 w-1/2 justify-center">
                                 <button
-                                    className="mt-4 w-1/2 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 cursor-pointer"
+                                    className="mt-4 w-1/2 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg 
+                                        hover:from-blue-600 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all 
+                                        transform hover:scale-105 cursor-pointer disabled:hover:from-blue-500 disabled:hover:to-indigo-600 disabled:hover:scale-100"
+                                    onClick={handleLearningCards}
+                                    disabled={score.incorrect.length === 0}
                                 >
-                                    Focus on {score.incorrect} learning cards
+                                    Focus on {score.incorrect.length} learning cards
                                 </button>
                                 <button
-                                    className="mt-4 w-1/2 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 cursor-pointer"
+                                    className="mt-4 w-1/2 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg
+                                        hover:from-purple-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all 
+                                        transform hover:scale-105 cursor-pointer"
+                                    onClick={handleResetFlashcards}
                                 >
                                     Restart Flashcards
                                 </button>

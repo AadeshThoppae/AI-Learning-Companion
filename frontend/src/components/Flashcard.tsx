@@ -1,12 +1,12 @@
 import type { Flashcard } from "@/types/documentTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegLightbulb } from "react-icons/fa6";
 
 interface FlashcardProps {
     flashcard: Flashcard;
-    score: { incorrect: number; correct: number; };
+    score: { incorrect: Flashcard[]; correct: number; };
     currentIndex: number;
-    setScore: (score: { incorrect: number; correct: number }) => void;
+    setScore: (score: { incorrect: Flashcard[]; correct: number }) => void;
     setCurrentIndex: (index: number) => void;
 }
 
@@ -19,12 +19,17 @@ export default function Flashcard({ flashcard, score, currentIndex, setScore, se
     }
 
     const handleRating = (e: React.MouseEvent<HTMLButtonElement>, correct: boolean) => {
-        e.stopPropagation(); // Prevent the flip when clicking the rating buttons
-        setScore({
-            incorrect: correct ? score.incorrect : score.incorrect + 1,
-            correct: correct ? score.correct + 1 : score.correct
-        });
-        setCurrentIndex(currentIndex + 1);
+        e.stopPropagation();
+        
+        handleFlip(); // Flip back to question side
+        
+        setTimeout(() => {
+            setScore({
+                incorrect: correct ? score.incorrect : [...score.incorrect, flashcard],
+                correct: correct ? score.correct + 1 : score.correct
+            });
+            setCurrentIndex(currentIndex + 1);
+        }, 400); // Small delay to ensure rotation reset is applied first
     }
 
     return (
