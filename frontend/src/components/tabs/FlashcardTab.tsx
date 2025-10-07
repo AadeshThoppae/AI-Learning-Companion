@@ -42,7 +42,7 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
             const result = await getFlashcards();
             setFlashcards(result.data?.flashcards ?? []);
             setCurrentFlashcards(result.data?.flashcards ?? []);
-        }catch(e){
+        } catch (e) {
             setError(e instanceof Error ? e.message: "failed to generate flashcards");
         }finally {
             setIsLoading(false);
