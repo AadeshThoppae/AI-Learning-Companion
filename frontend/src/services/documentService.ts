@@ -88,7 +88,7 @@ export const getFlashcards = async (): Promise<ApiResponse<FlashcardList>> => {
 	const result: ApiResponse<FlashcardList> = await res.json();
 
 	if (!res.ok) {
-		throw new Error(result.message || "failed to generate flashcards");
+		throw new Error(result.message || "Failed to generate flashcards");
 	}
 
 	return result;
