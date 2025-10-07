@@ -10,10 +10,6 @@ export interface Flashcard {
 	hint: string;
 }
 
-export interface FlashcardList {
-	flashcards: Flashcard[];
-}
-
 export interface ApiResponse<T> {
 	message: string;
 	code: string;

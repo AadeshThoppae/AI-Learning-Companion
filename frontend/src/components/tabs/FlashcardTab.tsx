@@ -1,18 +1,42 @@
 'use client'
 
 import { getFlashcards } from "@/services/documentService";
-import { FlashcardList } from "@/types/documentTypes";
+import { Flashcard as FlashcardType } from "@/types/documentTypes";
+import { useEffect, useState } from "react";
+import Flashcard from "@/components/Flashcard";
 
 interface FlashcardTabProps {
-    flashcards: FlashcardList | null;
+    flashcards: FlashcardType[] | null;
     handleReset: () => void;
-    setFlashcards: (flashcards: FlashcardList | null) => void;
-    setIsLoading: (loading: boolean) => void;
+    setFlashcards: (flashcards: FlashcardType[]) => void;
     setError: (error: string) => void;
     setActiveTab: (tab: string) => void;
 }
 
-export default function FlashcardTab({ flashcards, setFlashcards, handleReset, setIsLoading, setError, setActiveTab }: FlashcardTabProps) {
+export default function FlashcardTab({ flashcards, setFlashcards, handleReset, setError, setActiveTab }: FlashcardTabProps) {
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Fetch Flashcards on load
+        /* useEffect(() => {
+            if (flashcards) return;
+    
+            const fetchFlashcards = async () => {
+                setIsLoading(true);
+                try {
+                    const existingFlashcards = await getFlashcards(); // Your API call
+                    if (existingFlashcards) {
+                        setFlashcards(existingFlashcards.data);
+                    }
+                } catch (err) {
+                    console.error("Failed to fetch flashcards:", err);
+                    setError('Could not load existing flashcards.');
+                } finally {
+                    setIsLoading(false);
+                }
+            }
+    
+            fetchFlashcards();
+        }, [setError, setIsLoading, setFlashcards, flashcards]); */
 
     const handleGenerateFlashcards = async () => {
         setIsLoading(true);
@@ -21,7 +45,7 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
 
         try {
             const result = await getFlashcards();
-            setFlashcards(result.data);
+            setFlashcards(result.data?.flashcards);
         }catch(e){
             setError(e instanceof Error ? e.message: "failed to generate flashcards");
         }finally {
@@ -30,8 +54,8 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
     }
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8">
-            <div className="flex items-center justify-between mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 mx-auto w-2/3 ">
+            <div className="flex items-center justify-between gap-2 mb-6">
                 <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
                     AI-Generated Flashcards
                 </h2>
@@ -42,15 +66,32 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
                     New Notes
                 </button>
             </div>
-            {flashcards && flashcards.flashcards ? (
-                <div className="space-y-4">
-                    {/*include flashcard implementation here*/}
+
+            {isLoading ? (
+                <div className="flex items-center justify-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+                        <span className="ml-4 text-gray-600 dark:text-gray-300">
+                            Loading ...
+                        </span>
+                </div>
+            ) : flashcards && flashcards ? (
+                <div className="flex justify-center">
+                    {/* {flashcards.flashcards.map((flashcard, index) => ( */}
+                        <Flashcard flashcard={flashcards[0]} />
+                    {/* ))} */}
                 </div>
                 ) : (
-                    <div className="text-center py-12">
+                    <div className="text-center py-12 gap-4 flex flex-col items-center justify-center">
                         <p className="text-gray-500 dark:text-gray-400">
-                            No flashcards available. Please generate them from the summary.
+                            No flashcards available.
                         </p>
+                        <button
+                            onClick={handleGenerateFlashcards}
+                            disabled={isLoading}
+                            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 cursor-pointer"
+                        >
+                            {isLoading ? 'Processing...' : 'Generate Summary'}
+                        </button>
                     </div>
                 )
             }

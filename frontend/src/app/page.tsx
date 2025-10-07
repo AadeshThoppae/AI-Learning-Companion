@@ -5,17 +5,15 @@ import FlashcardTab from "@/components/tabs/FlashcardTab";
 import SummaryTab from "@/components/tabs/SummaryTab";
 import Tabs from "@/components/tabs/Tabs";
 import UploadTab from "@/components/tabs/UploadTab";
-import { getFlashcards } from "@/services/documentService";
-import { FlashcardList, Summary } from "@/types/documentTypes";
-import {useEffect, useState} from "react";
-import { AiOutlineClose } from 'react-icons/ai';
+import { Flashcard, Summary } from "@/types/documentTypes";
+import { useState} from "react";
 
 
 export default function Home() {
     const [notes, setNotes] = useState('');
     const [summary, setSummary] = useState<Summary | null>(null);
     const [file, setFile] = useState<File | null>(null);
-    const [flashcards,setFlashcards] = useState<FlashcardList | null>(null);
+    const [flashcards,setFlashcards] = useState<Flashcard[] | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('upload');
     const [error, setError] = useState<string>('');
