@@ -15,6 +15,7 @@ interface FlashcardTabProps {
 
 export default function FlashcardTab({ flashcards, setFlashcards, handleReset, setError, setActiveTab }: FlashcardTabProps) {
     const [isLoading, setIsLoading] = useState(false);
+    const [score, setScore] = useState<{ incorrect: number; correct: number; }>({ incorrect: 0, correct: 0 });
 
     // Fetch Flashcards on load
         /* useEffect(() => {
@@ -75,9 +76,23 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
                         </span>
                 </div>
             ) : flashcards && flashcards ? (
-                <div className="flex justify-center">
+                <div className="flex flex-col items-center justify-center">
+                    <div className="flex w-xl justify-between mb-4 text-center text-gray-700 dark:text-gray-300 font-semibold text-sm">
+                        <div className="flex gap-2 text-orange-400 items-center">
+                            <div className="px-3 border-orange-400 border-1 rounded-full text-sm leading-6">
+                                {score.incorrect} 
+                            </div>
+                            Still Learning
+                        </div>
+                        <div className="flex gap-2 text-green-400 items-center">
+                            Mastered
+                            <div className="px-3 border-green-400 border-1 rounded-full text-sm leading-6">
+                                {score.correct}
+                            </div>
+                        </div>
+                    </div>
                     {/* {flashcards.flashcards.map((flashcard, index) => ( */}
-                        <Flashcard flashcard={flashcards[0]} />
+                        <Flashcard flashcard={flashcards[0]} score={score} setScore={setScore} />
                     {/* ))} */}
                 </div>
                 ) : (

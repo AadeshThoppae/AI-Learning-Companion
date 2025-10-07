@@ -4,17 +4,25 @@ import { FaRegLightbulb } from "react-icons/fa6";
 
 interface FlashcardProps {
     flashcard: Flashcard;
+    score: { incorrect: number; correct: number; };
+    setScore: (score: { incorrect: number; correct: number }) => void;
 }
 
-export default function Flashcard({ flashcard } : FlashcardProps) {
+export default function Flashcard({ flashcard, score, setScore } : FlashcardProps) {
     const [showHint, setShowHint] = useState(false);
     const [rotationDegrees, setRotationDegrees] = useState(0);
 
     const handleFlip = () => {
         setRotationDegrees(prev => prev + 180);
-    };
+    }
 
-    const isFlipped = Math.floor(rotationDegrees / 180) % 2 === 1;
+    const handleRating = (e: React.MouseEvent<HTMLButtonElement>, correct: boolean) => {
+        e.stopPropagation(); // Prevent the flip when clicking the rating buttons
+        setScore({
+            incorrect: correct ? score.incorrect : score.incorrect + 1,
+            correct: correct ? score.correct + 1 : score.correct
+        });
+    }
 
     return (
         <button className="w-xl h-96 outline-none perspective-[1000px]" onClick={handleFlip}>
@@ -50,14 +58,14 @@ export default function Flashcard({ flashcard } : FlashcardProps) {
                             <button className="flex justify-center font-semibold gap-2 w-1/3 py-2 opacity-70 bg-gradient-to-r 
                                 from-purple-500 to-pink-600 text-white rounded-lg hover:opacity-100 hover:from-purple-600 hover:to-pink-700 
                                 transition-all transform hover:scale-105 cursor-pointer"
-                                onClick={(e) => { e.stopPropagation(); }}
+                                onClick={(e) => handleRating(e, false)}
                             >
                                 NO
                             </button>
                             <button className="flex justify-center font-semibold gap-2 w-1/3 py-2 opacity-70 bg-gradient-to-r 
                                 from-purple-500 to-pink-600 text-white rounded-lg hover:opacity-100 hover:from-purple-600 hover:to-pink-700 
                                 transition-all transform hover:scale-105 cursor-pointer"
-                                onClick={(e) => { e.stopPropagation(); }}
+                                onClick={(e) => handleRating(e, true)}
                             >
                                 YES
                             </button>
