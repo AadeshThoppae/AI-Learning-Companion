@@ -51,7 +51,7 @@ export default function UploadTab({
         try {
             const result = await getSummary();
             setSummary(result.data);
-        }catch(e){
+        } catch(e){
             setError(e instanceof Error ? e.message: 'Failed to generate summary');
         }finally {
             setIsLoading(false);
