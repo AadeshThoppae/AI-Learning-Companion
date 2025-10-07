@@ -80,6 +80,32 @@ npm start
 3. Track your progress and receive AI-powered feedback.
 4. Connect with peers and mentors for collaborative learning.
 
+## AI Tools Usage
+### Tools Used
+* ChatGPT & Gemini - for code explanations, debugging help and drafting JavaDoc and JSDoc.
+* Github Copilot - for inline code suggestions and autocomplete on the frontend.
+
+#### Representable Prompts and Reflections
+##### Prompt 1:
+> "Currently this flips from bottom-to-top and then from top-to-bottom can i make it flip always from bottom-to-top so it keeps flipping all the way around?"
+##### Reflection:
+We provided our existing code snippet, and Copilot generated a solid solution for making the flashcard always flip from bottom to top. It also explained its reasoning and the expected behavior. However, it introduced an unnecessary variable called `isFlipped`. We implemented Copilot’s suggestion with a few manual tweaks to simplify the logic and make the animation work as intended.
+
+##### Prompt 2:
+> "Can you help me generate simple JavaDoc for this code ..."
+##### Reflection:
+ChatGPT is great at writing, so it naturally produced detailed and well-structured JavaDoc comments. However, the generated documentation was often too long and more detailed than necessary. We used its output as a solid draft and then refined it to match our project’s style and level of detail.
+
+## Tutorials and External References
+- Card Flip Animation Tutorial: [A Card Flip with Tailwind](https://www.telerik.com/blogs/card-flip-tailwind)
+    - Used this tutorial to learn the basics of creating a flip animation using Tailwind CSS. The tutorial helped me understand how to use perspective, rotation, and transform utilities to create smooth transitions.
+
+- Next.js Documentation: [Nextjs](https://nextjs.org/docs)
+  - Used for understanding the app structure, routing, and built-in methods.
+
+- Tailwind CSS Documentation: [Tailwindcss](https://tailwindcss.com/docs)
+  - Used extensively for styling components and building responsive layouts.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
