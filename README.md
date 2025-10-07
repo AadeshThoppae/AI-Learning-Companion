@@ -83,7 +83,7 @@ npm start
 ## AI Tools Usage
 ### Tools Used
 * ChatGPT & Gemini - for code explanations, debugging help and drafting JavaDoc and JSDoc.
-* Github Copilot - for inline code suggestions and autocomplete on the frontend.
+* Github Copilot - for inline code suggestions and autocomplete on the frontend. Copilot was also used to generate draft summaries for pull requests and to request minor code review suggestions directly in GitHub.
 
 #### Representable Prompts and Reflections
 ##### Prompt 1:
@@ -95,6 +95,11 @@ We provided our existing code snippet, and Copilot generated a solid solution fo
 > "Can you help me generate simple JavaDoc for this code ..."
 ##### Reflection:
 ChatGPT is great at writing, so it naturally produced detailed and well-structured JavaDoc comments. However, the generated documentation was often too long and more detailed than necessary. We used its output as a solid draft and then refined it to match our project’s style and level of detail.
+
+##### GitHub Copilot for PR Drafts and Reviews
+
+##### Reflection:
+We used GitHub Copilot’s built-in GitHub integration to assist with pull requests across multiple PRs. For example, in PR [#14](https://github.com/AadeshThoppae/AI-Learning-Companion/pull/14), we clicked “Write draft summary” to generate a clear pull request description and “Request code review” to let Copilot highlight minor typos and small code improvements before the human review. This feature helped streamline the review process, reduce trivial corrections, and still allowed us to verify and adjust all changes manually.
 
 ## Tutorials and External References
 - Card Flip Animation Tutorial: [A Card Flip with Tailwind](https://www.telerik.com/blogs/card-flip-tailwind)
