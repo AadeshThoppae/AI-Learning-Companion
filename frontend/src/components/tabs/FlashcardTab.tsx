@@ -5,6 +5,9 @@ import { Flashcard as FlashcardType } from "@/types/documentTypes";
 import { useState } from "react";
 import Flashcard from "@/components/Flashcard";
 
+/**
+ * Props interface for the FlashcardTab component
+ */
 interface FlashcardTabProps {
     flashcards: FlashcardType[] | null;
     handleReset: () => void;
@@ -13,12 +16,23 @@ interface FlashcardTabProps {
     setActiveTab: (tab: string) => void;
 }
 
+/**
+ * FlashcardTab component for displaying and managing AI-generated flashcards
+ * Provides functionality to generate, study, and track progress through flashcards
+ * 
+ * @param props - The component props
+ * @returns JSX element containing the flashcard interface
+ */
 export default function FlashcardTab({ flashcards, setFlashcards, handleReset, setError, setActiveTab }: FlashcardTabProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [score, setScore] = useState<{ incorrect: FlashcardType[]; correct: number; }>({ incorrect: [], correct: 0 });
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentFlashcards, setCurrentFlashcards] = useState<FlashcardType[] | null>(flashcards);
 
+    /**
+     * Generates new flashcards from the uploaded document
+     * Sets loading state and handles errors during generation
+     */
     const handleGenerateFlashcards = async () => {
         setIsLoading(true);
         setError('');
@@ -26,8 +40,8 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
 
         try {
             const result = await getFlashcards();
-            setFlashcards(result.data?.flashcards);
-            setCurrentFlashcards(result.data?.flashcards);
+            setFlashcards(result.data?.flashcards ?? []);
+            setCurrentFlashcards(result.data?.flashcards ?? []);
         }catch(e){
             setError(e instanceof Error ? e.message: "failed to generate flashcards");
         }finally {
@@ -35,12 +49,20 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
         }
     }
 
+    /**
+     * Resets the flashcard session to the original set
+     * Clears score and resets current index to beginning
+     */
     const handleResetFlashcards = () => {
         setScore({ incorrect: [], correct: 0 });
         setCurrentFlashcards(flashcards);
         setCurrentIndex(0);
     }
 
+    /**
+     * Starts a focused study session with only the incorrectly answered flashcards
+     * Resets score and index for the learning session
+     */
     const handleLearningCards = () => {
         if (!currentFlashcards) return;
         setCurrentFlashcards(score.incorrect);
@@ -95,6 +117,7 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
                     {currentIndex < currentFlashcards.length ? (
                         <Flashcard flashcard={currentFlashcards[currentIndex]} score={score} setScore={setScore} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
                     ) : (
+                        /* Finished all flashcards screen */
                         <div className="w-full text-center py-12 gap-4 flex flex-col items-center justify-center">
                             <p className="text-gray-500 dark:text-gray-400">
                                 You&apos;ve completed all flashcards! Great job! 🎉
@@ -122,6 +145,7 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
                     )}
                 </div>
                 ) : (
+                    /* No flashcards available */
                     <div className="text-center py-12 gap-4 flex flex-col items-center justify-center">
                         <p className="text-gray-500 dark:text-gray-400">
                             No flashcards available.

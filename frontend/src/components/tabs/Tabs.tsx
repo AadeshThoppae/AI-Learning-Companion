@@ -1,11 +1,21 @@
 'use client'
 
+/**
+ * Props interface for the Tabs component
+ */
 interface TabsProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   tabs: string[];
 }
 
+/**
+ * Tabs component for creating a horizontal tab navigation interface
+ * Renders a set of clickable tabs with active state styling and hover effects
+ * 
+ * @param props - The component props containing tab state and configuration
+ * @returns JSX element containing the tab navigation bar
+ */
 export default function Tabs({ activeTab, setActiveTab, tabs }: TabsProps) {
 	return (
         <div className={"flex justify-center mb-8"}>

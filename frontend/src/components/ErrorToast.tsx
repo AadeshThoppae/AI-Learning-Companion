@@ -1,11 +1,21 @@
 import { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
+/**
+ * Props interface for the ErrorToast component
+ */
 interface ErrorToastProps {
   message: string;
   onClose: () => void;
 }
 
+/**
+ * ErrorToast component for displaying temporary error notifications
+ * Features smooth slide-in/out animations and auto-dismiss functionality
+ * 
+ * @param props - The component props containing message and close handler
+ * @returns JSX element containing an animated error toast notification
+ */
 export default function ErrorToast({ message, onClose }: ErrorToastProps) {
   const [visible, setVisible] = useState(false); // Start hidden
 

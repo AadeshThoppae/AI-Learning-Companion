@@ -5,6 +5,9 @@ import { Summary } from "@/types/documentTypes";
 import { useEffect } from "react";
 import MarkdownRenderer from "../MarkdownRenderer";
 
+/**
+ * Props interface for the SummaryTab component
+ */
 interface SummaryTabProps {
     summary: Summary | null;
     isLoading: boolean;
@@ -14,12 +17,23 @@ interface SummaryTabProps {
     handleReset: () => void;
 }
 
+/**
+ * SummaryTab component for displaying AI-generated document summaries
+ * Automatically fetches existing summary on mount and provides navigation to other learning modes
+ * 
+ * @param props - The component props containing summary data and state management functions
+ * @returns JSX element containing the summary interface with key points and action buttons
+ */
 export default function SummaryTab({ summary, isLoading, setSummary, setIsLoading, setError, handleReset }: SummaryTabProps) {
 
     // Fetch summary on load
     useEffect(() => {
         if (summary) return; // If summary already exists, do not fetch again
 
+        /**
+         * Asynchronous function to fetch summary from the API
+         * Handles loading states and error conditions
+         */
         const fetchSummary = async () => {
             setIsLoading(true);
             try {
@@ -74,7 +88,7 @@ export default function SummaryTab({ summary, isLoading, setSummary, setIsLoadin
                     </ul>
                 </div>
 
-
+                {/* Action buttons for other learning modes */}
                 <div className="mt-8 flex gap-4">
                     <button className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 cursor-pointer">
                         Generate Flashcards

@@ -2,6 +2,9 @@ import { getSummary, uploadPDF, uploadText } from "@/services/documentService";
 import { Summary } from "@/types/documentTypes";
 import { useState } from "react";
 
+/**
+ * Props interface for the UploadTab component
+ */
 interface UploadTabsProps {
     notes: string;
     setNotes: (notes: string) => void;
@@ -15,6 +18,13 @@ interface UploadTabsProps {
     setSummary: (summary: Summary | null) => void;
 }
 
+/**
+ * UploadTab component for uploading and processing study materials
+ * Supports both text input and PDF file upload with automatic summary generation
+ * 
+ * @param props - The component props containing upload state and handler functions
+ * @returns JSX element containing the upload interface with mode selection and input areas
+ */
 export default function UploadTab({ 
     notes, 
     setNotes, 
@@ -29,55 +39,71 @@ export default function UploadTab({
 }: UploadTabsProps) {
     const [uploadMode, setUploadMode] = useState<'text' | 'pdf'>('text');
 
+    /**
+     * Generates a summary from the uploaded content
+     * Switches to summary tab and handles loading states
+     */
     const handleGenerateSummary = async () => {
-            setIsLoading(true);
-            setError(' ');
-            setActiveTab('summary');
-    
-            try {
-                const result = await getSummary();
-                setSummary(result.data);
-            }catch(e){
-                setError(e instanceof Error ? e.message: 'Failed to generate summary');
-            }finally {
-                setIsLoading(false);
-            }
-        };
+        setIsLoading(true);
+        setError(' ');
+        setActiveTab('summary');
 
+        try {
+            const result = await getSummary();
+            setSummary(result.data);
+        }catch(e){
+            setError(e instanceof Error ? e.message: 'Failed to generate summary');
+        }finally {
+            setIsLoading(false);
+        }
+    };
+
+    /**
+     * Uploads text content to the server
+     * Validates input and triggers summary generation on success
+     */
     const handleTextUpload = async () => {
-            if(!notes.trim()) return;
-    
-            setIsLoading(true);
-    
-            try {
-                await uploadText(notes);
-                await handleGenerateSummary();
-            }catch (e) {
-                setError(e instanceof Error ? e.message : "text upload failed");
-                setIsLoading(false);
-            }
-        }
-    
-        const handlePDFUpload = async () => {
-            if(!file){
-                return;
-            }
-            setIsLoading(true);
-            setError('');
-    
-            try {
-                const formData = new FormData();
-                formData.append('file', file);
-    
-                await uploadPDF(file);
-    
-                await handleGenerateSummary();
-            }catch(e){
-                setError(e instanceof Error ? e.message : "failure to upload PDF");
-                setIsLoading(false);
-            }
-        }
+        if(!notes.trim()) return;
 
+        setIsLoading(true);
+
+        try {
+            await uploadText(notes);
+            await handleGenerateSummary();
+        }catch (e) {
+            setError(e instanceof Error ? e.message : "text upload failed");
+            setIsLoading(false);
+        }
+    }
+    
+    /**
+     * Uploads PDF file to the server
+     * Validates file selection and triggers summary generation on success
+     */
+    const handlePDFUpload = async () => {
+        if(!file){
+            return;
+        }
+        setIsLoading(true);
+        setError('');
+
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            await uploadPDF(file);
+
+            await handleGenerateSummary();
+        }catch(e){
+            setError(e instanceof Error ? e.message : "failure to upload PDF");
+            setIsLoading(false);
+        }
+    }
+
+    /**
+     * Routes the upload process based on the current upload mode
+     * Calls either text or PDF upload handler
+     */
     const handleNotesSubmit = async () => {
         if(uploadMode === 'text'){
             await handleTextUpload();
@@ -86,6 +112,12 @@ export default function UploadTab({
         }
     }
 
+    /**
+     * Handles file input change events
+     * Updates the file state when a new PDF is selected
+     * 
+     * @param e - The file input change event
+     */
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]);
@@ -97,7 +129,7 @@ export default function UploadTab({
         <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">
             Upload Your Notes
         </h2>
-        {/*Upload mode*/}
+        {/*Upload mode selection buttons */}
         <div className={"flex justify-center mb-6"}>
             <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
                 <button onClick={()=>{
@@ -125,7 +157,7 @@ export default function UploadTab({
 
         <div className="space-y-6">
             {uploadMode === 'text' ? (
-                // Text Mode
+                // Text input mode
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Paste your lecture notes, slides, or study material below:
@@ -141,7 +173,7 @@ export default function UploadTab({
                     </div>
                 </div>
             ) : (
-                // PDF mode
+                // PDF input mode
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Upload a PDF document:
@@ -162,6 +194,7 @@ export default function UploadTab({
                             />
                         </label>
                     </div>
+                    {/* Display selected file information */}
                     {file &&(
                         <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                             <div className="flex items-center gap-2">
@@ -173,8 +206,7 @@ export default function UploadTab({
                     )}
                 </div>
             )}
-
-
+            {/* Action buttons */}
             <div className="flex items-center justify-between gap-3">
                 <button
                     onClick={handleReset}

@@ -8,7 +8,13 @@ import UploadTab from "@/components/tabs/UploadTab";
 import { Flashcard, Summary } from "@/types/documentTypes";
 import { useState} from "react";
 
-
+/**
+ * Home component - Main page of the AI Learning Companion application
+ * Manages all application state and renders different tabs for document processing,
+ * summary generation, and flashcard studying
+ * 
+ * @returns JSX element containing the complete application interface
+ */
 export default function Home() {
     const [notes, setNotes] = useState('');
     const [summary, setSummary] = useState<Summary | null>(null);
@@ -20,8 +26,10 @@ export default function Home() {
 
     const tabs = ['upload','summary','flashcards'];
 
-    //const canSubmit = uploadMode === 'text' ? notes.trim().length > 0 : file !== null;
-
+    /**
+     * Resets all application state to initial values
+     * Clears uploaded content, generated data, and returns to upload tab
+     */
     const handleReset = () =>{
         setNotes('');
         setFile(null);
@@ -33,18 +41,26 @@ export default function Home() {
     }
     return (
     <div className="font-sans items-center justify-items-center min-h-screen p-8 gap-16 w-full">
+        {/* Error notification toast */}
         {error && (
             <ErrorToast message={error} onClose={() => setError('')} />
         )}
-      <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
-                  AI Learning Companion
-              </h2>
-          </div>
-      </div>
+
+        {/* Header */}
+        <div className="container mx-auto px-4">
+            <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
+                    AI Learning Companion
+                </h2>
+            </div>
+        </div>
+
+        {/* Tabs for navigation */}
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs}/>
+
+        {/* Main content area */}
         <div className="mx-auto w-full">
+            {/* Upload Tab */}
             {activeTab === 'upload' && (
                 <UploadTab
                     notes={notes} 
@@ -60,6 +76,7 @@ export default function Home() {
                 />
             )}
             
+            {/* Summary Tab */}
             {activeTab === 'summary' && (
                 <SummaryTab
                     summary={summary}
@@ -70,6 +87,7 @@ export default function Home() {
                     handleReset={handleReset}
                 />
             )}
+            
             {/* Flashcards Tab */}
             {activeTab === 'flashcards' && (
                 <FlashcardTab
