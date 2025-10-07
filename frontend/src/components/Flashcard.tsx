@@ -5,10 +5,12 @@ import { FaRegLightbulb } from "react-icons/fa6";
 interface FlashcardProps {
     flashcard: Flashcard;
     score: { incorrect: number; correct: number; };
+    currentIndex: number;
     setScore: (score: { incorrect: number; correct: number }) => void;
+    setCurrentIndex: (index: number) => void;
 }
 
-export default function Flashcard({ flashcard, score, setScore } : FlashcardProps) {
+export default function Flashcard({ flashcard, score, currentIndex, setScore, setCurrentIndex } : FlashcardProps) {
     const [showHint, setShowHint] = useState(false);
     const [rotationDegrees, setRotationDegrees] = useState(0);
 
@@ -22,6 +24,7 @@ export default function Flashcard({ flashcard, score, setScore } : FlashcardProp
             incorrect: correct ? score.incorrect : score.incorrect + 1,
             correct: correct ? score.correct + 1 : score.correct
         });
+        setCurrentIndex(currentIndex + 1);
     }
 
     return (
