@@ -21,7 +21,7 @@ export const uploadText = async (text: string): Promise<ApiResponse<null>> => {
 	const result: ApiResponse<null> = await res.json();
 
 	if (!res.ok) {
-		throw new Error(result.message || "Failed to upload pdf");
+		throw new Error(result.message || "Failed to upload text");
 	}
 
 	return result;
