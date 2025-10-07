@@ -2,7 +2,7 @@
 
 import { getFlashcards } from "@/services/documentService";
 import { Flashcard as FlashcardType } from "@/types/documentTypes";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Flashcard from "@/components/Flashcard";
 
 interface FlashcardTabProps {
