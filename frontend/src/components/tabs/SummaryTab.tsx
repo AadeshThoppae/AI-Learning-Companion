@@ -3,6 +3,7 @@
 import { getSummary } from "@/services/documentService";
 import { Summary } from "@/types/documentTypes";
 import { useEffect } from "react";
+import MarkdownRenderer from "../MarkdownRenderer";
 
 interface SummaryTabProps {
     summary: Summary | null;
@@ -62,12 +63,12 @@ export default function SummaryTab({ summary, isLoading, setSummary, setIsLoadin
             <div className="prose dark:prose-invert max-w-none">
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-lg border-l-4 border-blue-500">
                     <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
-                        {summary.title}
+                        <MarkdownRenderer content={summary.title} />
                     </h3>
                     <ul className="space-y-2">
                         {summary.keyPoints.map((point, index) => (
                             <li key={index} className="text-gray-700 dark:text-gray-300">
-                                {point}
+                                <MarkdownRenderer content={point} />
                             </li>
                         ))}
                     </ul>

@@ -37,7 +37,9 @@ export default function Flashcard({ flashcard, score, currentIndex, setScore, se
             <div className={`relative size-full transition duration-500 transform-3d ease`} style={{ transform: `rotateX(${rotationDegrees}deg)` }}>
                 <div className="absolute inset-0 size-full backface-hidden bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-6 rounded-xl border-l-4 border-blue-500
                                 shadow-lg mb-4 hover:scale-[1.02] transition-transform cursor-pointer flex flex-col justify-around items-center">
-                    <h3 className="text-2xl font-semibold text-gray-800 dark:text-white mb-2 text-center ">{flashcard.id}. {flashcard.question}</h3>
+                    <h3 className="text-2xl font-semibold text-gray-800 dark:text-white mb-2 text-center ">
+                        {flashcard.id}. {flashcard.question}
+                    </h3>
                     
                     <button onClick={(e) => {
                         e.stopPropagation(); // Prevent the flip when clicking the hint button
