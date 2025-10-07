@@ -51,9 +51,9 @@ export default function UploadTab({
         try {
             const result = await getSummary();
             setSummary(result.data);
-        } catch(e){
+        } catch(e) {
             setError(e instanceof Error ? e.message: 'Failed to generate summary');
-        }finally {
+        } finally {
             setIsLoading(false);
         }
     };
@@ -63,14 +63,14 @@ export default function UploadTab({
      * Validates input and triggers summary generation on success
      */
     const handleTextUpload = async () => {
-        if(!notes.trim()) return;
+        if (!notes.trim()) return;
 
         setIsLoading(true);
 
         try {
             await uploadText(notes);
             await handleGenerateSummary();
-        }catch (e) {
+        } catch (e) {
             setError(e instanceof Error ? e.message : "text upload failed");
             setIsLoading(false);
         }
@@ -81,7 +81,7 @@ export default function UploadTab({
      * Validates file selection and triggers summary generation on success
      */
     const handlePDFUpload = async () => {
-        if(!file){
+        if (!file){
             return;
         }
         setIsLoading(true);
@@ -94,7 +94,7 @@ export default function UploadTab({
             await uploadPDF(file);
 
             await handleGenerateSummary();
-        }catch(e){
+        } catch (e) {
             setError(e instanceof Error ? e.message : "failure to upload PDF");
             setIsLoading(false);
         }
@@ -105,9 +105,9 @@ export default function UploadTab({
      * Calls either text or PDF upload handler
      */
     const handleNotesSubmit = async () => {
-        if(uploadMode === 'text'){
+        if (uploadMode === 'text'){
             await handleTextUpload();
-        }else{
+        } else {
             await handlePDFUpload();
         }
     }
