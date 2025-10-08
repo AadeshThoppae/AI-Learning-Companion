@@ -75,7 +75,7 @@ export default function Home() {
                     setSummary={setSummary}
                 />
             )}
-            A
+            
             {/* Summary Tab */}
             {activeTab === 'summary' && (
                 <SummaryTab
