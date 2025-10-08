@@ -1,9 +1,11 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.service;
 
 import com.aadeshandreas.ailearning.ai_learning_companion.model.FlashcardList;
+import com.aadeshandreas.ailearning.ai_learning_companion.model.Quiz;
 import com.aadeshandreas.ailearning.ai_learning_companion.model.Summary;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.DocumentRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.FlashcardRepository;
+import com.aadeshandreas.ailearning.ai_learning_companion.repository.QuizRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.SummaryRepository;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
@@ -33,6 +35,8 @@ public class DocumentService {
     private final FlashcardRepository flashcardRepository;
     private final Summarizer summarizer;
     private final FlashcardGenerator flashcardGenerator;
+    private final QuizRepository quizRepository;
+    private final QuizGenerator quizGenerator;
 
     /**
      * Constructs the DocumentService with all its required dependencies, which are
@@ -50,13 +54,15 @@ public class DocumentService {
             SummaryRepository summaryRepository,
             FlashcardRepository flashcardRepository,
             Summarizer summarizer,
-            FlashcardGenerator flashcardGenerator
-    ) {
+            FlashcardGenerator flashcardGenerator,
+            QuizRepository quizRepository, QuizGenerator quizGenerator) {
         this.documentRepository = documentRepository;
         this.summaryRepository = summaryRepository;
         this.flashcardRepository = flashcardRepository;
         this.summarizer = summarizer;
         this.flashcardGenerator = flashcardGenerator;
+        this.quizRepository = quizRepository;
+        this.quizGenerator = quizGenerator;
     }
 
     /**
@@ -128,5 +134,17 @@ public class DocumentService {
         FlashcardList flashcardList = flashcardGenerator.generate(documentText);
         flashcardRepository.setFlashcardList(flashcardList);
         return flashcardList;
+    }
+
+    public Quiz generateQuiz(){
+        if (quizRepository.getQuiz() != null){
+            return quizRepository.getQuiz();
+        }
+
+        String docText = documentRepository.getDocumentText();
+        Quiz quiz = quizGenerator.generate(docText);
+        quizRepository.setQuiz(quiz);
+        return quiz;
+
     }
 }

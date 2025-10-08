@@ -38,7 +38,7 @@ export default function SummaryTab({ summary, isLoading, setSummary, setIsLoadin
         const fetchSummary = async () => {
             setIsLoading(true);
             try {
-                const existingSummary = await getSummary(); // Your API call
+                const existingSummary = await getSummary();
                 if (existingSummary) {
                     setSummary(existingSummary.data);
                 }
