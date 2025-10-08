@@ -23,6 +23,9 @@ export interface FlashcardList {
 	flashcards: Flashcard[];
 }
 
+/**
+ * Represents a single quiz question with multiple choice options
+ */
 export interface Quiz {
 	id: number;
 	question: string;
@@ -30,6 +33,9 @@ export interface Quiz {
 	answerId: number;
 }
 
+/**
+ * Represents a single answer option for a quiz question
+ */
 export interface QuizOption {
 	id: number;
 	option: string;

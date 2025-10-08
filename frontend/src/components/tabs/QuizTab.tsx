@@ -16,11 +16,22 @@ interface QuizTabProps {
     setQuizzes: (quizzes: QuizType[]) => void;
 }
 
+/**
+ * QuizTab component that displays and manages AI-generated quiz questions.
+ * Provides navigation between questions and handles quiz generation.
+ * 
+ * @param props - The component props
+ * @returns A rendered quiz tab with navigation controls
+ */
 export default function QuizTab({ quizzes, handleReset, setError, setActiveTab, setQuizzes }: QuizTabProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [currentQuizzes, setCurrentQuizzes] = useState<QuizType[] | null>(quizzes);
 
+    /**
+     * Handles the generation of new quiz questions by calling the API.
+     * Updates loading state, error messages, and quiz data.
+     */
     const handleGenerateQuiz = async () => {
         setIsLoading(true);
         setError('');
@@ -61,7 +72,9 @@ export default function QuizTab({ quizzes, handleReset, setError, setActiveTab, 
                 </div>
             ) : currentQuizzes ? (
                 <div>
+                    {/* Current Quiz */}
                     <Quiz quiz={currentQuizzes[currentIndex]} />
+                    {/* Navigation Buttons */}
                     <div className="flex w-3xl mx-auto justify-end gap-8 mt-6">
                         <button
                             onClick={() => setCurrentIndex((prev) => Math.max(prev - 1, 0))}

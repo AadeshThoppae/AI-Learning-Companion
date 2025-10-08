@@ -94,6 +94,12 @@ export const getFlashcards = async (): Promise<ApiResponse<FlashcardList>> => {
 	return result;
 };
 
+/**
+ * Retrieves or generates quizzes from the uploaded document
+ *
+ * @returns Promise resolving to API response containing quiz list
+ * @throws Error if quiz generation fails or server returns error status
+ */
 export const getQuizzes = async (): Promise<ApiResponse<QuizList>> => {
 	const res = await fetch(`${API_BASE_URL}/api/documents/quiz`, {
 		method: "GET",

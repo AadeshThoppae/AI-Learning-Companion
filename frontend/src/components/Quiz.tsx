@@ -2,11 +2,20 @@ import type { Quiz } from "@/types/documentTypes";
 import { useEffect, useState } from "react";
 import MarkdownRenderer from "./MarkdownRenderer";
 
+/**
+ * Props interface for the Quiz component
+ */
 interface QuizProps {
     quiz: Quiz;
 }
 
-
+/**
+ * Quiz component that displays an interactive quiz question with multiple choice options.
+ * Shows feedback and explanations after the user selects an answer.
+ * 
+ * @param props - The component props
+ * @returns A rendered quiz component
+ */
 export default function Quiz({ quiz }: QuizProps) {
     const [isAnswered, setIsAnswered] = useState<boolean>(false);
 
@@ -14,6 +23,10 @@ export default function Quiz({ quiz }: QuizProps) {
         setIsAnswered(false); // Reset answer state when a new quiz is loaded
     }, [quiz]);
 
+    /**
+     * Handles the click event when a user selects an option.
+     * Prevents multiple answers by checking if the quiz has already been answered.
+     */
     const handleOptionClick = () => {
         if (isAnswered) return;
         
