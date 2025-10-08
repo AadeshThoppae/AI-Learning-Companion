@@ -10,6 +10,6 @@ import java.util.List;
 public class Question {
     private String question;
     private List<AnswerOption> options;
-    private String answer;
+    private int answerId;
 
 }
