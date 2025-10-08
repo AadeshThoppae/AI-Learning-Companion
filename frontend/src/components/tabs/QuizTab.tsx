@@ -1,8 +1,9 @@
 'use client'
 
-import { dummyQuizList, Quiz as QuizType } from "@/types/documentTypes";
+import { Quiz as QuizType } from "@/types/documentTypes";
 import { useState } from "react";
 import Quiz from "../Quiz";
+import { getQuizzes } from "@/services/documentService";
 
 /**
  * Props interface for the QuizTab component
@@ -26,11 +27,10 @@ export default function QuizTab({ quizzes, handleReset, setError, setActiveTab, 
         setActiveTab('Quiz');
 
         try {
-            //const result = await getFlashcards();
-            const result = { data: dummyQuizList }; // Placeholder until API is implemented
+            const result = await getQuizzes();
 
-            setQuizzes(result.data?.quizzes ?? []);
-            setCurrentQuizzes(result.data?.quizzes ?? []);
+            setQuizzes(result.data?.quiz ?? []);
+            setCurrentQuizzes(result.data?.quiz ?? []);
         } catch (e) {
             setError(e instanceof Error ? e.message: "failed to generate Quiz");
         }finally {

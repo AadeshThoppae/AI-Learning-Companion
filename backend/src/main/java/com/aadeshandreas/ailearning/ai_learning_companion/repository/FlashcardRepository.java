@@ -13,5 +13,5 @@ import org.springframework.web.context.annotation.SessionScope;
 @Getter
 @NoArgsConstructor
 public class FlashcardRepository {
-    FlashcardList flashcardList;
+    private FlashcardList flashcardList;
 }

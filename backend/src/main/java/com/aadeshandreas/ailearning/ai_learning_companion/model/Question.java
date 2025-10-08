@@ -8,6 +8,7 @@ import java.util.List;
 @Setter
 @Getter
 public class Question {
+    private int id;
     private String question;
     private List<AnswerOption> options;
     private int answerId;

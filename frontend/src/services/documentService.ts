@@ -1,4 +1,4 @@
-import { ApiResponse, FlashcardList, Summary } from "@/types/documentTypes";
+import { ApiResponse, FlashcardList, QuizList, Summary } from "@/types/documentTypes";
 
 /** Base URL for the API endpoints */
 const API_BASE_URL = "http://localhost:8080";
@@ -89,6 +89,21 @@ export const getFlashcards = async (): Promise<ApiResponse<FlashcardList>> => {
 
 	if (!res.ok) {
 		throw new Error(result.message || "Failed to generate flashcards");
+	}
+
+	return result;
+};
+
+export const getQuizzes = async (): Promise<ApiResponse<QuizList>> => {
+	const res = await fetch(`${API_BASE_URL}/api/documents/quiz`, {
+		method: "GET",
+		credentials: "include",
+	});
+
+	const result: ApiResponse<QuizList> = await res.json();
+
+	if (!res.ok) {
+		throw new Error(result.message || "Failed to generate quizzes");
 	}
 
 	return result;
