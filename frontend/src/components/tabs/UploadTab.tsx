@@ -46,7 +46,7 @@ export default function UploadTab({
     const handleGenerateSummary = async () => {
         setIsLoading(true);
         setError(' ');
-        setActiveTab('summary');
+        setActiveTab('Summary');
 
         try {
             const result = await getSummary();

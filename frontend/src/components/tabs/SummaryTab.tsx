@@ -93,7 +93,7 @@ export default function SummaryTab({ summary, isLoading, setSummary, setIsLoadin
                 <div className="mt-8 flex gap-4">
                     <button className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg
                         hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 cursor-pointer"
-                        onClick={() => setActiveTab('flashcards')}>
+                        onClick={() => setActiveTab('Flashcards')}>
                         Generate Flashcards
                     </button>
                     <button className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 cursor-pointer">

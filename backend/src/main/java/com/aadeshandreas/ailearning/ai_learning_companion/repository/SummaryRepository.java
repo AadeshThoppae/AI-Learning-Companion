@@ -13,5 +13,5 @@ import org.springframework.web.context.annotation.SessionScope;
 @Getter
 @NoArgsConstructor
 public class SummaryRepository {
-    Summary summary;
+    private Summary summary;
 }

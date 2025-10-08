@@ -17,10 +17,36 @@ export interface Flashcard {
 }
 
 /**
- * Container for a collection of flashcards
+ * Container for a collection of flashcards in the format returned by the API
  */
 export interface FlashcardList {
 	flashcards: Flashcard[];
+}
+
+/**
+ * Represents a single quiz question with multiple choice options
+ */
+export interface Quiz {
+	id: number;
+	question: string;
+	options: QuizOption[];
+	answerId: number;
+}
+
+/**
+ * Represents a single answer option for a quiz question
+ */
+export interface QuizOption {
+	id: number;
+	option: string;
+	explanation: string;
+}
+
+/**
+ * Container for a collection of Quizzes in the format returned by the API
+ */
+export interface QuizList {
+	quiz: Quiz[];
 }
 
 /**

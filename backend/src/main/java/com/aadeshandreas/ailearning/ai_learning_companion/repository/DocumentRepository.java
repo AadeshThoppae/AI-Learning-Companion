@@ -15,7 +15,7 @@ import org.springframework.web.context.annotation.SessionScope;
 @Setter
 @NoArgsConstructor
 public class DocumentRepository {
-    String documentText;
+    private String documentText;
 
     public String getDocumentText() {
         if (documentText == null) {
