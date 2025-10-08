@@ -43,7 +43,7 @@ export default function QuizTab({ quizzes, handleReset, setError, setActiveTab, 
             setQuizzes(result.data?.quiz ?? []);
             setCurrentQuizzes(result.data?.quiz ?? []);
         } catch (e) {
-            setError(e instanceof Error ? e.message: "failed to generate Quiz");
+            setError(e instanceof Error ? e.message : "Failed to generate quiz.");
         }finally {
             setIsLoading(false);
         }
