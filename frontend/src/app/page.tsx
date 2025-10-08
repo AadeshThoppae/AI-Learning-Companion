@@ -2,6 +2,7 @@
 
 import ErrorToast from "@/components/ErrorToast";
 import FlashcardTab from "@/components/tabs/FlashcardTab";
+import QuizTab from "@/components/tabs/QuizTab";
 import SummaryTab from "@/components/tabs/SummaryTab";
 import Tabs from "@/components/tabs/Tabs";
 import UploadTab from "@/components/tabs/UploadTab";
@@ -19,7 +20,8 @@ export default function Home() {
     const [notes, setNotes] = useState('');
     const [summary, setSummary] = useState<Summary | null>(null);
     const [file, setFile] = useState<File | null>(null);
-    const [flashcards,setFlashcards] = useState<Flashcard[] | null>(null);
+    const [flashcards, setFlashcards] = useState<Flashcard[] | null>(null);
+    const [quiz, setQuiz] = useState<Flashcard[] | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('Upload');
     const [error, setError] = useState<string>('');
@@ -61,7 +63,7 @@ export default function Home() {
         {/* Main content area */}
         <div className="mx-auto w-full">
             {/* Upload Tab */}
-            {activeTab === 'upload' && (
+            {activeTab === 'Upload' && (
                 <UploadTab
                     notes={notes} 
                     setNotes={setNotes} 
@@ -77,7 +79,7 @@ export default function Home() {
             )}
             
             {/* Summary Tab */}
-            {activeTab === 'summary' && (
+            {activeTab === 'Summary' && (
                 <SummaryTab
                     summary={summary}
                     isLoading={isLoading}
@@ -90,13 +92,20 @@ export default function Home() {
             )}
 
             {/* Flashcards Tab */}
-            {activeTab === 'flashcards' && (
+            {activeTab === 'Flashcards' && (
                 <FlashcardTab
                     flashcards={flashcards}
                     handleReset={handleReset}
                     setFlashcards={setFlashcards}
                     setError={setError}
                     setActiveTab={setActiveTab}
+                />
+            )}
+
+            {/* Quiz Tab */}
+            {activeTab === 'Quiz' && (
+                <QuizTab
+                    handleReset={handleReset}
                 />
             )}
        </div>
