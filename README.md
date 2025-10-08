@@ -84,6 +84,7 @@ npm start
 ### Tools Used
 * ChatGPT & Gemini - for code explanations, debugging help and drafting JavaDoc and JSDoc.
 * Github Copilot - for inline code suggestions and autocomplete on the frontend. Copilot was also used to generate draft summaries for pull requests and to request minor code review suggestions directly in GitHub.
+* Claude - Inline CSS suggestions for streamlined UI/UX
 
 #### Representable Prompts and Reflections
 ##### Prompt 1:
