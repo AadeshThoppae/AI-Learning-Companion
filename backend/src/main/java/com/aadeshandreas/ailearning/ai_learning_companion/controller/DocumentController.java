@@ -153,4 +153,38 @@ public class DocumentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
+    /**
+     * Generates a quiz from the document previously uploaded in the user's session.
+     *
+     * @return A {@link ResponseEntity} wrapping a generic {@link ApiResponse}. On success,
+     * the ApiResponse's data field will contain a {@link Quiz} object. On failure,
+     * it will contain an error message and code with null data.
+     */
+    @GetMapping(value = "/quiz")
+    public ResponseEntity<ApiResponse<?>> uploadAndGenerateQuiz() {
+        try {
+            Quiz q = documentService.generateQuiz();
+            ApiResponse<Quiz> successResponse = new ApiResponse<>("Success", "200_OK", q);
+            return ResponseEntity.ok(successResponse);
+        } catch (IllegalStateException e) {
+            logger.warn("Quiz generation failed because no document was uploaded: {}", e.getMessage());
+
+            ApiResponse<Void> errorResponse = new ApiResponse<>(
+                    "No document found. Please upload a document first.",
+                    "NO_DOCUMENT_UPLOADED",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        } catch (Exception e) {
+            logger.error("Error processing uploaded PDF", e);
+
+            ApiResponse<Void> errorResponse = new ApiResponse<>(
+                    "Unable to process document",
+                    "INTERNAL_SERVER_ERROR",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
 }
