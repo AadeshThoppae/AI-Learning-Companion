@@ -57,7 +57,7 @@ export default function Quiz({ quiz }: QuizProps) {
                             <span>{option.id}. </span>
                             <span>{option.option}</span>
                         </div>
-                        {isAnswered && isAnswered && (
+                        {isAnswered && (
                             <div className="flex flex-col transition-all">
                                 <span className={`font-semibold ${
                                     option.id === quiz.answerId
