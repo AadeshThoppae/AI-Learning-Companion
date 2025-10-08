@@ -36,7 +36,7 @@ export default function FlashcardTab({ flashcards, setFlashcards, handleReset, s
     const handleGenerateFlashcards = async () => {
         setIsLoading(true);
         setError('');
-        setActiveTab('flashcards');
+        setActiveTab('Flashcards');
 
         try {
             const result = await getFlashcards();

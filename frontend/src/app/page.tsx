@@ -21,10 +21,10 @@ export default function Home() {
     const [file, setFile] = useState<File | null>(null);
     const [flashcards,setFlashcards] = useState<Flashcard[] | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState('upload');
+    const [activeTab, setActiveTab] = useState('Upload');
     const [error, setError] = useState<string>('');
 
-    const tabs = ['upload','summary','flashcards'];
+    const tabs = ['Upload','Summary','Flashcards', 'Quiz'];
 
     /**
      * Resets all application state to initial values
@@ -34,7 +34,7 @@ export default function Home() {
         setNotes('');
         setFile(null);
         setSummary(null);
-        setActiveTab('upload');
+        setActiveTab('Upload');
         setFlashcards(null);
         setError('');
 
