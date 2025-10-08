@@ -77,7 +77,7 @@ export default function Quiz({ quiz }: QuizProps) {
                                     )}
                                 </span>
                                 <span className="ml-6 mt-1">
-                                    {option.explanation}    
+                                    {option.explanation}
                                 </span>
                             </div>
                         )}
