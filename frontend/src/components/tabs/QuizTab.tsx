@@ -1,23 +1,24 @@
 'use client'
 
-import { getFlashcards } from "@/services/documentService";
-import { dummyQuizList, Flashcard as FlashcardType, Quiz } from "@/types/documentTypes";
+import { dummyQuizList, Quiz as QuizType } from "@/types/documentTypes";
 import { useState } from "react";
-import Flashcard from "@/components/Flashcard";
+import Quiz from "../Quiz";
 
 /**
  * Props interface for the QuizTab component
  */
 interface QuizTabProps {
+    quizzes: QuizType[] | null;
     handleReset: () => void;
     setError: (error: string) => void;
     setActiveTab: (tab: string) => void;
-    setQuiz: (flashcards: Quiz[]) => void;
+    setQuizzes: (quizzes: QuizType[]) => void;
 }
 
-export default function QuizTab({ handleReset, setError, setActiveTab, setQuiz }: QuizTabProps) {
+export default function QuizTab({ quizzes, handleReset, setError, setActiveTab, setQuizzes }: QuizTabProps) {
     const [isLoading, setIsLoading] = useState(false);
-    const [currentQuiz, setCurrentQuiz] = useState<Quiz[] | null>();
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentQuizzes, setCurrentQuizzes] = useState<QuizType[] | null>(quizzes);
 
     const handleGenerateQuiz = async () => {
         setIsLoading(true);
@@ -28,10 +29,10 @@ export default function QuizTab({ handleReset, setError, setActiveTab, setQuiz }
             //const result = await getFlashcards();
             const result = { data: dummyQuizList }; // Placeholder until API is implemented
 
-            setQuiz(result.data?.quizzes ?? []);
-            setCurrentFlashcards(result.data?.flashcards ?? []);
+            setQuizzes(result.data?.quizzes ?? []);
+            setCurrentQuizzes(result.data?.quizzes ?? []);
         } catch (e) {
-            setError(e instanceof Error ? e.message: "failed to generate flashcards");
+            setError(e instanceof Error ? e.message: "failed to generate Quiz");
         }finally {
             setIsLoading(false);
         }
@@ -58,6 +59,26 @@ export default function QuizTab({ handleReset, setError, setActiveTab, setQuiz }
                             Loading ...
                         </span>
                 </div>
+            ) : currentQuizzes ? (
+                <div>
+                    <Quiz quiz={currentQuizzes[currentIndex]} />
+                    <div className="flex w-3xl mx-auto justify-end gap-8 mt-6">
+                        <button
+                            onClick={() => setCurrentIndex((prev) => Math.max(prev - 1, 0))}
+                            disabled={currentIndex === 0}
+                            className="px-6 py-2 shadow-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 cursor-pointer"
+                        >
+                            Previous
+                        </button>
+                        <button
+                            onClick={() => setCurrentIndex((prev) => Math.min(prev + 1, (currentQuizzes?.length ?? 1) - 1))}
+                            disabled={currentIndex === (currentQuizzes?.length ?? 1) - 1}
+                            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 cursor-pointer"
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
             ) : (
                 /* No quiz available */
                 <div className="text-center py-12 gap-4 flex flex-col items-center justify-center">
@@ -65,7 +86,7 @@ export default function QuizTab({ handleReset, setError, setActiveTab, setQuiz }
                         No quiz available.
                     </p>
                     <button
-                        //onClick={handleGenerateFlashcards}
+                        onClick={handleGenerateQuiz}
                         disabled={isLoading}
                         className="px-6 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg hover:from-blue-600 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 cursor-pointer"
                     >

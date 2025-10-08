@@ -6,7 +6,7 @@ import QuizTab from "@/components/tabs/QuizTab";
 import SummaryTab from "@/components/tabs/SummaryTab";
 import Tabs from "@/components/tabs/Tabs";
 import UploadTab from "@/components/tabs/UploadTab";
-import { Flashcard, Summary } from "@/types/documentTypes";
+import { Flashcard, Quiz, Summary } from "@/types/documentTypes";
 import { useState} from "react";
 
 /**
@@ -21,7 +21,7 @@ export default function Home() {
     const [summary, setSummary] = useState<Summary | null>(null);
     const [file, setFile] = useState<File | null>(null);
     const [flashcards, setFlashcards] = useState<Flashcard[] | null>(null);
-    const [quiz, setQuiz] = useState<Flashcard[] | null>(null);
+    const [quizzes, setQuizzes] = useState<Quiz[] | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('Upload');
     const [error, setError] = useState<string>('');
@@ -105,7 +105,11 @@ export default function Home() {
             {/* Quiz Tab */}
             {activeTab === 'Quiz' && (
                 <QuizTab
+                    quizzes={quizzes}
                     handleReset={handleReset}
+                    setError={setError}
+                    setActiveTab={setActiveTab}
+                    setQuizzes={setQuizzes}
                 />
             )}
        </div>
