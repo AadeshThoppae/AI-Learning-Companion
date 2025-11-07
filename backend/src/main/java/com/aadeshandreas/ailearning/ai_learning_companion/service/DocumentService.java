@@ -1,8 +1,7 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.service;
 
-import com.aadeshandreas.ailearning.ai_learning_companion.model.FlashcardList;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Quiz;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Summary;
+import com.aadeshandreas.ailearning.ai_learning_companion.repository.coding.CodingQuestionRepository;
+import com.aadeshandreas.ailearning.ai_learning_companion.repository.coding.CodingTopicRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.DocumentRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.content.FlashcardRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.content.QuizRepository;
@@ -34,7 +33,8 @@ public class DocumentService {
     private final SummaryRepository summaryRepository;
     private final FlashcardRepository flashcardRepository;
     private final QuizRepository quizRepository;
-    private final QuizGenerator quizGenerator;
+    private final CodingTopicRepository codingTopicRepository;
+    private final CodingQuestionRepository codingQuestionRepository;
 
     /**
      * Constructs the DocumentService with all its required dependencies, which are
@@ -43,22 +43,24 @@ public class DocumentService {
      * @param documentRepository    The session-scoped repository for storing the uploaded document's text.
      * @param summaryRepository     The session-scoped cache for storing the generated summary.
      * @param flashcardRepository   The session-scoped cache for storing the generated flashcards.
-     * @param summarizer            The AI service bean responsible for generating summaries.
-     * @param flashcardGenerator    The AI service bean responsible for generating flashcards.
+     * @param quizRepository        The session-scoped cache for storing the generated quiz.
+     * @param codingTopicRepository The session-scoped cache for storing extracted coding topics.
+     * @param codingQuestionRepository The session-scoped cache for storing generated coding questions.
      */
     @Autowired
     public DocumentService(
             DocumentRepository documentRepository,
             SummaryRepository summaryRepository,
             FlashcardRepository flashcardRepository,
-            Summarizer summarizer,
-            FlashcardGenerator flashcardGenerator,
-            QuizRepository quizRepository, QuizGenerator quizGenerator) {
+            QuizRepository quizRepository,
+            CodingTopicRepository codingTopicRepository,
+            CodingQuestionRepository codingQuestionRepository) {
         this.documentRepository = documentRepository;
         this.summaryRepository = summaryRepository;
         this.flashcardRepository = flashcardRepository;
         this.quizRepository = quizRepository;
-        this.quizGenerator = quizGenerator;
+        this.codingTopicRepository = codingTopicRepository;
+        this.codingQuestionRepository = codingQuestionRepository;
     }
 
     /**

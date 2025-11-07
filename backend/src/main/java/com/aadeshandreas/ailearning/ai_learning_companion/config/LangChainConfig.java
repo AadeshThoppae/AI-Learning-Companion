@@ -1,8 +1,10 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.config;
 
-import com.aadeshandreas.ailearning.ai_learning_companion.service.FlashcardGenerator;
-import com.aadeshandreas.ailearning.ai_learning_companion.service.QuizGenerator;
-import com.aadeshandreas.ailearning.ai_learning_companion.service.Summarizer;
+import com.aadeshandreas.ailearning.ai_learning_companion.service.coding.CodingQuestionGenerator;
+import com.aadeshandreas.ailearning.ai_learning_companion.service.coding.CodingTopicExtractor;
+import com.aadeshandreas.ailearning.ai_learning_companion.service.generation.FlashcardGenerator;
+import com.aadeshandreas.ailearning.ai_learning_companion.service.generation.QuizGenerator;
+import com.aadeshandreas.ailearning.ai_learning_companion.service.generation.Summarizer;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.service.AiServices;
@@ -75,7 +77,7 @@ public class LangChainConfig {
         return AiServices.create(FlashcardGenerator.class, chatModel);
     }
     /**
-     * Creates the {@link com.aadeshandreas.ailearning.ai_learning_companion.service.QuizGenerator} AI Service bean.
+     * Creates the {@link QuizGenerator} AI Service bean.
      * LangChain4j will create a dynamic implementation of the QuizGenerator interface.
      *
      * @param chatModel The configured {@link ChatModel} bean to use for the AI calls.
@@ -84,6 +86,30 @@ public class LangChainConfig {
     @Bean
     public QuizGenerator quizGenerator(ChatModel chatModel) {
         return AiServices.create(QuizGenerator.class, chatModel);
+    }
+
+    /**
+     * Creates the {@link CodingTopicExtractor} AI Service bean.
+     * LangChain4j will create a dynamic implementation of the CodingTopicExtractor interface.
+     *
+     * @param chatModel The configured {@link ChatModel} bean to use for the AI calls.
+     * @return A ready-to-use instance of the CodingTopicExtractor service.
+     */
+    @Bean
+    public CodingTopicExtractor codingTopicExtractor(ChatModel chatModel) {
+        return AiServices.create(CodingTopicExtractor.class, chatModel);
+    }
+
+    /**
+     * Creates the {@link CodingQuestionGenerator} AI Service bean.
+     * LangChain4j will create a dynamic implementation of the CodingQuestionGenerator interface.
+     *
+     * @param chatModel The configured {@link ChatModel} bean to use for the AI calls.
+     * @return A ready-to-use instance of the CodingQuestionGenerator service.
+     */
+    @Bean
+    public CodingQuestionGenerator codingQuestionGenerator(ChatModel chatModel) {
+        return AiServices.create(CodingQuestionGenerator.class, chatModel);
     }
 
 }
