@@ -36,7 +36,7 @@ export default function Quiz({ quiz, onAnswer, isAnswered = false }: QuizProps) 
             </div>
             <div className={`flex flex-col gap-2 ${isAnswered && 'gap-4'}`}>
                 {quiz.options.map((option) => (
-                    <button disabled={isAnswered} key={option.id} className={`shadow-xl flex flex-col gap-2 bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-300 dark:border-gray-600
+                    <button type="button" disabled={isAnswered} key={option.id} className={`shadow-xl flex flex-col gap-2 bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-300 dark:border-gray-600
                         ${!isAnswered && 'hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer'}
                         ${isAnswered && 'cursor-not-allowed opacity-90'}
                         transition-all
