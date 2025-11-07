@@ -136,7 +136,7 @@ export default function QuizTab({ quizzes, handleReset, setError, setActiveTab, 
                             onClick={handleResetQuiz}
                             disabled={isLoading}
                         >
-                            {isLoading ? 'Processing...' : 'Try again'}
+                            Try again
                         </button>
                     </div>
                 </div>
