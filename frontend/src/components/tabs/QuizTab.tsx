@@ -100,7 +100,7 @@ export default function QuizTab({ quizzes, handleReset, setError, setActiveTab, 
                     {/* Progress indicator - centered */}
                     <div className="mx-auto w-xl items-center mb-4 text-center text-gray-700 dark:text-gray-300 font-semibold text-sm">
                         <div className="text-sm text-gray-600 dark:text-gray-400">
-                            Quiz {currentIndex + 1 <= currentQuizzes.length ? currentIndex + 1 : currentIndex} of {currentQuizzes.length} - Score: {score}
+                            Quiz {currentIndex + 1} of {currentQuizzes.length} - Score: {score}
                         </div>
                     </div>
                     {/* Current Quiz */}
