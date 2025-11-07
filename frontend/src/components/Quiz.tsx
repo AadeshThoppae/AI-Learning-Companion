@@ -1,5 +1,4 @@
 import type { Quiz } from "@/types/documentTypes";
-import { useEffect, useState } from "react";
 import MarkdownRenderer from "./MarkdownRenderer";
 
 /**
@@ -7,6 +6,8 @@ import MarkdownRenderer from "./MarkdownRenderer";
  */
 interface QuizProps {
     quiz: Quiz;
+    onAnswer: (isCorrect: boolean) => void;
+    isAnswered?: boolean;
 }
 
 /**
@@ -16,21 +17,15 @@ interface QuizProps {
  * @param props - The component props
  * @returns A rendered quiz component
  */
-export default function Quiz({ quiz }: QuizProps) {
-    const [isAnswered, setIsAnswered] = useState<boolean>(false);
-
-    useEffect(() => {
-        setIsAnswered(false); // Reset answer state when a new quiz is loaded
-    }, [quiz]);
+export default function Quiz({ quiz, onAnswer, isAnswered = false }: QuizProps) {
 
     /**
      * Handles the click event when a user selects an option.
      * Prevents multiple answers by checking if the quiz has already been answered.
      */
-    const handleOptionClick = () => {
-        if (isAnswered) return;
-        
-        setIsAnswered(true);
+    const handleOptionClick = (optionId: number) => {
+        const isCorrect = optionId === quiz.answerId;
+        onAnswer(isCorrect);
     };
 
     return (
@@ -41,7 +36,7 @@ export default function Quiz({ quiz }: QuizProps) {
             </div>
             <div className={`flex flex-col gap-2 ${isAnswered && 'gap-4'}`}>
                 {quiz.options.map((option) => (
-                    <div key={option.id} className={`shadow-xl flex flex-col gap-2 bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-300 dark:border-gray-600
+                    <button type="button" disabled={isAnswered} key={option.id} className={`shadow-xl flex flex-col gap-2 bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-300 dark:border-gray-600
                         ${!isAnswered && 'hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer'}
                         ${isAnswered && 'cursor-not-allowed opacity-90'}
                         transition-all
@@ -51,14 +46,14 @@ export default function Quiz({ quiz }: QuizProps) {
                                 : 'ring-2 ring-red-300 dark:ring-red-700'
                             )
                         }`}
-                        onClick={handleOptionClick}
+                        onClick={() => handleOptionClick(option.id)}
                         >
                         <div className="flex gap-2 font-semibold">
                             <span>{option.id}. </span>
                             <span>{option.option}</span>
                         </div>
                         {isAnswered && (
-                            <div className="flex flex-col transition-all">
+                            <div className="flex flex-col transition-all text-left ">
                                 <span className={`font-semibold ${
                                     option.id === quiz.answerId
                                         ? 'text-green-500 dark:text-green-300'
@@ -81,7 +76,7 @@ export default function Quiz({ quiz }: QuizProps) {
                                 </span>
                             </div>
                         )}
-                    </div>
+                    </button>
                 ))}
             </div>
         </div>
