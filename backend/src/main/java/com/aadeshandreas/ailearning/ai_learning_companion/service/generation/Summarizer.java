@@ -1,6 +1,6 @@
-package com.aadeshandreas.ailearning.ai_learning_companion.service;
+package com.aadeshandreas.ailearning.ai_learning_companion.service.generation;
 
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Summary;
+import com.aadeshandreas.ailearning.ai_learning_companion.model.content.Summary;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 

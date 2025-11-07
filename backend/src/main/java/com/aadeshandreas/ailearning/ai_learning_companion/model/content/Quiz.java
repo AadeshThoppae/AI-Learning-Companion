@@ -1,4 +1,4 @@
-package com.aadeshandreas.ailearning.ai_learning_companion.model;
+package com.aadeshandreas.ailearning.ai_learning_companion.model.content;
 
 
 import lombok.Getter;

@@ -4,9 +4,9 @@ import com.aadeshandreas.ailearning.ai_learning_companion.model.FlashcardList;
 import com.aadeshandreas.ailearning.ai_learning_companion.model.Quiz;
 import com.aadeshandreas.ailearning.ai_learning_companion.model.Summary;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.DocumentRepository;
-import com.aadeshandreas.ailearning.ai_learning_companion.repository.FlashcardRepository;
-import com.aadeshandreas.ailearning.ai_learning_companion.repository.QuizRepository;
-import com.aadeshandreas.ailearning.ai_learning_companion.repository.SummaryRepository;
+import com.aadeshandreas.ailearning.ai_learning_companion.repository.content.FlashcardRepository;
+import com.aadeshandreas.ailearning.ai_learning_companion.repository.content.QuizRepository;
+import com.aadeshandreas.ailearning.ai_learning_companion.repository.content.SummaryRepository;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
@@ -33,8 +33,6 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
     private final SummaryRepository summaryRepository;
     private final FlashcardRepository flashcardRepository;
-    private final Summarizer summarizer;
-    private final FlashcardGenerator flashcardGenerator;
     private final QuizRepository quizRepository;
     private final QuizGenerator quizGenerator;
 
@@ -59,8 +57,6 @@ public class DocumentService {
         this.documentRepository = documentRepository;
         this.summaryRepository = summaryRepository;
         this.flashcardRepository = flashcardRepository;
-        this.summarizer = summarizer;
-        this.flashcardGenerator = flashcardGenerator;
         this.quizRepository = quizRepository;
         this.quizGenerator = quizGenerator;
     }
@@ -99,52 +95,11 @@ public class DocumentService {
         clearCache();
     }
     /**
-     * clears cahced summaries/flashcards so when new content is uploaded, we get a fresh AI generation
+     * clears cached summaries/flashcards/quizzes/coding topics so when new content is uploaded, we get a fresh AI generation
      */
     private void clearCache() {
         summaryRepository.setSummary(null);
         flashcardRepository.setFlashcardList(null);
-    }
-
-    /**
-     * Generates a summary from the currently stored document, using a cache to avoid repeat AI calls.
-     * @return The generated or cached Summary object.
-     */
-    public Summary generateSummary() {
-        if (summaryRepository.getSummary() != null) {
-            return summaryRepository.getSummary();
-        }
-
-        String documentText = documentRepository.getDocumentText();
-        Summary summary = summarizer.generate(documentText);
-        summaryRepository.setSummary(summary);
-        return summary;
-    }
-
-    /**
-     * Generates flashcards from the currently stored document, using a cache.
-     * @return The generated or cached FlashcardList object.
-     */
-    public FlashcardList generateFlashcards() {
-        if (flashcardRepository.getFlashcardList() != null) {
-            return flashcardRepository.getFlashcardList();
-        }
-
-        String documentText = documentRepository.getDocumentText();
-        FlashcardList flashcardList = flashcardGenerator.generate(documentText);
-        flashcardRepository.setFlashcardList(flashcardList);
-        return flashcardList;
-    }
-
-    public Quiz generateQuiz(){
-        if (quizRepository.getQuiz() != null){
-            return quizRepository.getQuiz();
-        }
-
-        String docText = documentRepository.getDocumentText();
-        Quiz quiz = quizGenerator.generate(docText);
-        quizRepository.setQuiz(quiz);
-        return quiz;
-
+        quizRepository.setQuiz(null);
     }
 }

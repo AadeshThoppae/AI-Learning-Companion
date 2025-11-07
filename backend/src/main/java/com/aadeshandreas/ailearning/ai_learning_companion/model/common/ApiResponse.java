@@ -1,4 +1,4 @@
-package com.aadeshandreas.ailearning.ai_learning_companion.model;
+package com.aadeshandreas.ailearning.ai_learning_companion.model.common;
 
 /**
  * A generic wrapper class for all API responses, implementing the "envelope" pattern.

@@ -1,4 +1,4 @@
-package com.aadeshandreas.ailearning.ai_learning_companion.service;
+package com.aadeshandreas.ailearning.ai_learning_companion.service.generation;
 
 /**
  * A generic interface for AI content generators.

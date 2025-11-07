@@ -1,4 +1,4 @@
-package com.aadeshandreas.ailearning.ai_learning_companion.model;
+package com.aadeshandreas.ailearning.ai_learning_companion.model.common;
 
 import jakarta.validation.constraints.NotBlank;
 

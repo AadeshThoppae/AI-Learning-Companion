@@ -1,5 +1,6 @@
-package com.aadeshandreas.ailearning.ai_learning_companion.model;
+package com.aadeshandreas.ailearning.ai_learning_companion.model.content;
 
+import com.aadeshandreas.ailearning.ai_learning_companion.model.AnswerOption;
 import lombok.Getter;
 import lombok.Setter;
 

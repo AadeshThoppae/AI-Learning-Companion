@@ -1,6 +1,6 @@
-package com.aadeshandreas.ailearning.ai_learning_companion.repository;
+package com.aadeshandreas.ailearning.ai_learning_companion.repository.content;
 
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Quiz;
+import com.aadeshandreas.ailearning.ai_learning_companion.model.content.Summary;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +12,6 @@ import org.springframework.web.context.annotation.SessionScope;
 @Setter
 @Getter
 @NoArgsConstructor
-public class QuizRepository {
-    private Quiz quiz;
+public class SummaryRepository {
+    private Summary summary;
 }
