@@ -1,5 +1,4 @@
 import type { Quiz } from "@/types/documentTypes";
-import { useEffect, useState } from "react";
 import MarkdownRenderer from "./MarkdownRenderer";
 
 /**
