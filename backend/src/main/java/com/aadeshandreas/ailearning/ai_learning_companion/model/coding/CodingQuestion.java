@@ -17,7 +17,7 @@ public class CodingQuestion {
     private int topicId;            // Reference to selected topic
     private String title;           // e.g., "Validate Binary Search Tree"
     private String description;     // Full problem description
-    private String difficulty;      // EASY, MEDIUM, HARD
+    private Difficulty difficulty;      // EASY, MEDIUM, HARD
     private List<Example> examples; // Input/output examples
     private String methodSignature; // e.g., "public boolean isValidBST(TreeNode root)"
     private String starterCode;     // Template code with TODO
