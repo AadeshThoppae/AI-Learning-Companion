@@ -15,6 +15,10 @@ import { IoResizeOutline } from "react-icons/io5";
 import { LuBookOpenText } from "react-icons/lu";
 import VerticalSplitter from "@/components/VerticalSplitter";
 import Link from "next/link";
+import { getCodingQuestion } from "@/services/codingService";
+import { CodingQuestion, Difficulty } from "@/types/codingTypes";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
+
 
 export default function CodePage() {
   const [code, setCode] = useState(`import java.util.*;
@@ -33,6 +37,8 @@ class Solution {
     "description" | "editor" | "console"
   >("description");
   const editorContainerRef = useRef<HTMLDivElement>(null);
+  const [codingQuestion, setCodingQuestion] = useState<CodingQuestion | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const handleEditorWillMount = (monaco: Monaco) => {
     monaco.editor.defineTheme("leetcode", leetcodeTheme);
@@ -61,6 +67,98 @@ class Solution {
     window.addEventListener("resize", () => editorInstance.layout());
     return () => observer.disconnect();
   }, [editorInstance]);
+
+  const dummydata: CodingQuestion = {
+    "id": "java_interface_easy_001",
+    "topicId": 1,
+    "title": "Simulate Diverse Entity Actions",
+    "description": "In object-oriented programming, interfaces define a contract for classes. Any class that implements an interface must provide an implementation for all methods declared in that interface. This allows you to treat objects of different types uniformly, as long as they share a common interface.\n\nYour task is to:\n1.  **Define an interface** named `LoggableAction` with a single method: `String performAction()`. This method should return a String describing the action performed.\n2.  **Implement this interface** in two concrete classes:\n    *   `Robot`: Its `performAction()` method should return the string \"Robot performing automated task.\".\n    *   `Human`: Its `performAction()` method should return the string \"Human performing daily task.\".\n3.  **Complete the `simulateActions` method** in the `Solution` class. This method will receive an array of `String`s, where each string represents an entity type (\"Robot\" or \"Human\"). For each entity type in the input array, you should:\n    *   Create an instance of the corresponding class (`Robot` or `Human`).\n    *   Call its `performAction()` method.\n    *   Collect all the returned action strings into a `List<String>` and return it.",
+    "difficulty": "EASY",
+    "examples": [
+      {
+        "input": "[\"Robot\", \"Human\"]",
+        "output": "[\"Robot performing automated task.\", \"Human performing daily task.\"]",
+        "explanation": "A 'Robot' object is created and its action is logged. Then a 'Human' object is created and its action is logged. The results are collected in order."
+      },
+      {
+        "input": "[\"Human\", \"Human\", \"Robot\"]",
+        "output": "[\"Human performing daily task.\", \"Human performing daily task.\", \"Robot performing automated task.\"]",
+        "explanation": "Two 'Human' objects are created, followed by one 'Robot' object, and their respective actions are logged in the order they appear in the input array."
+      }
+    ],
+    "methodSignature": "public static java.util.List<String> simulateActions(String[] entityTypes)",
+    "starterCode": "import java.util.ArrayList;\nimport java.util.List;\n\n// TODO: Define the 'LoggableAction' interface here.\n// It should declare a single method: String performAction();\n\n// TODO: Implement the 'LoggableAction' interface in a class named 'Robot'.\n// Its performAction() method should return \"Robot performing automated task.\".\n\n// TODO: Implement the 'LoggableAction' interface in a class named 'Human'.\n// Its performAction() method should return \"Human performing daily task.\".\n\n\npublic class Solution {\n    public static List<String> simulateActions(String[] entityTypes) {\n        List<String> results = new ArrayList<>();\n\n        // TODO: Iterate through the 'entityTypes' array.\n        // For each string 'type' in 'entityTypes':\n        //   1. Based on the 'type' string (\"Robot\" or \"Human\"), create an instance of the\n        //      corresponding class.\n        //   2. Use polymorphism: assign the created instance to a variable of type 'LoggableAction'.\n        //   3. Call the 'performAction()' method on this 'LoggableAction' variable.\n        //   4. Add the returned string to the 'results' list.\n\n        return results;\n    }\n}",
+    "testCases": [
+      {
+        "id": 1,
+        "input": "[\"Robot\", \"Human\"]",
+        "expectedOutput": "[\"Robot performing automated task.\", \"Human performing daily task.\"]",
+        "hidden": false
+      },
+      {
+        "id": 2,
+        "input": "[\"Human\", \"Human\", \"Robot\"]",
+        "expectedOutput": "[\"Human performing daily task.\", \"Human performing daily task.\", \"Robot performing automated task.\"]",
+        "hidden": false
+      },
+      {
+        "id": 3,
+        "input": "[\"Robot\"]",
+        "expectedOutput": "[\"Robot performing automated task.\"]",
+        "hidden": true
+      },
+      {
+        "id": 4,
+        "input": "[]",
+        "expectedOutput": "[]",
+        "hidden": true
+      },
+      {
+        "id": 5,
+        "input": "[\"Robot\", \"Robot\", \"Human\", \"Human\", \"Robot\"]",
+        "expectedOutput": "[\"Robot performing automated task.\", \"Robot performing automated task.\", \"Human performing daily task.\", \"Human performing daily task.\", \"Robot performing automated task.\"]",
+        "hidden": true
+      }
+    ],
+    "hints": "Remember that an interface defines a contract, and concrete classes must implement all its methods.\nUse a `for` loop to iterate through the `entityTypes` array. Inside the loop, use `if-else if` statements to determine which class to instantiate.\nYou can assign an instance of an implementing class (e.g., `Robot` or `Human`) to a variable of the interface type (`LoggableAction`). This demonstrates polymorphism.",
+    "constraints": {
+      "timeComplexity": "O(N)",
+      "spaceComplexity": "O(N)",
+      "rules": [
+        "0 <= entityTypes.length <= 100",
+        "Each string in `entityTypes` will be exactly \"Robot\" or \"Human\"."
+      ]
+    }
+  };
+
+  // Fetch coding question on page load
+  useEffect(() => {
+    const fetchCodingQuestion = async () => {
+      try {
+        setLoading(true);
+        // TODO: Get topicId and difficulty from query params or props
+        const dummyRequest = {
+          topicId: 1,
+          difficulty: "EASY" as Difficulty,
+        };
+
+        /* const response = await getCodingQuestion(dummyRequest);
+        if (response.data) {
+          setCodingQuestion(response.data);
+          setCode(response.data.starterCode);
+        } */
+        // Using dummy data for now
+        setCodingQuestion(dummydata);
+        setCode(dummydata.starterCode);
+      } catch (error) {
+        console.error("Failed to fetch coding question:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCodingQuestion();
+  }, []);
 
   const handleSplitChange = () => {
     if (editorInstance) setTimeout(() => editorInstance.layout(), 0);
@@ -119,12 +217,89 @@ class Solution {
                 </span>
             </div>
             <div className="p-6">
-              <h1 className="text-2xl font-bold mb-4 bg-[#333333]">
-                Problem Description
-              </h1>
-              <p className="text-gray-700">
-                Write your problem description here...
-              </p>
+              {loading ? (
+                <div className="text-gray-400">Loading question...</div>
+              ) : codingQuestion ? (
+                <>
+                  <h1 className="text-2xl font-bold mb-2 text-white">
+                    {codingQuestion.title}
+                  </h1>
+                  <span className={`inline-block px-2 py-1 rounded text-xs font-semibold mb-4 ${
+                    codingQuestion.difficulty === "EASY" ? 'bg-green-600 text-white' :
+                    codingQuestion.difficulty === "MEDIUM" ? 'bg-yellow-600 text-white' :
+                    'bg-red-600 text-white'
+                  }`}>
+                    {codingQuestion.difficulty}
+                  </span>
+                  <p className="text-gray-300 mb-4 whitespace-pre-wrap">
+                    <MarkdownRenderer content={codingQuestion.description}/>
+                  </p>
+                  {codingQuestion.examples && codingQuestion.examples.length > 0 && (
+                    <div className="mb-4">
+                      <h3 className="font-bold text-white mb-2">Examples:</h3>
+                      {codingQuestion.examples.map((example, idx) => (
+                        <div key={idx} className="mb-3">
+                          <div className="bg-[#1e1e1e] rounded-lg overflow-hidden border border-[#444444]">
+                            <div className="px-3 py-2 bg-[#2a2a2a] border-b border-[#444444]">
+                              <span className="text-gray-400 text-xs font-semibold">Example {idx + 1}</span>
+                            </div>
+                            <div className="p-3 space-y-2">
+                              <div>
+                                <div className="text-gray-400 text-xs font-semibold mb-1">Input:</div>
+                                <code className="block bg-[#262626] text-green-400 px-3 py-2 rounded font-mono text-sm border border-[#333333]">
+                                  {example.input}
+                                </code>
+                              </div>
+                              <div>
+                                <div className="text-gray-400 text-xs font-semibold mb-1">Output:</div>
+                                <code className="block bg-[#262626] text-blue-400 px-3 py-2 rounded font-mono text-sm border border-[#333333]">
+                                  {example.output}
+                                </code>
+                              </div>
+                              {example.explanation && (
+                                <div className="pt-1">
+                                  <div className="text-gray-400 text-xs font-semibold mb-1">Explanation:</div>
+                                  <p className="text-gray-300 text-sm italic">{example.explanation}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {codingQuestion.constraints && (
+                    <div className="mb-4">
+                      <h3 className="font-bold text-white mb-2">Constraints:</h3>
+                      {(codingQuestion.constraints.timeComplexity || codingQuestion.constraints.spaceComplexity) && (
+                        <div className="mb-2 space-y-1">
+                          {codingQuestion.constraints.timeComplexity && (
+                            <p className="text-gray-300">
+                              <strong>Time Complexity:</strong> <code className="bg-[#333333] text-green-400 px-1.5 py-0.5 rounded font-mono text-sm">{codingQuestion.constraints.timeComplexity}</code>
+                            </p>
+                          )}
+                          {codingQuestion.constraints.spaceComplexity && (
+                            <p className="text-gray-300">
+                              <strong>Space Complexity:</strong> <code className="bg-[#333333] text-green-400 px-1.5 py-0.5 rounded font-mono text-sm">{codingQuestion.constraints.spaceComplexity}</code>
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      <ul className="list-disc list-inside text-gray-300">
+                        {codingQuestion.constraints.rules
+                          .filter(rule => rule && rule.trim())
+                          .map((rule, idx) => (
+                          <li key={idx} className="text-gray-300">
+                            <MarkdownRenderer content={rule} inline />
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p className="text-gray-400">Failed to load question</p>
+              )}
             </div>
           </div>
 

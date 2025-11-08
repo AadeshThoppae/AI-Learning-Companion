@@ -1,7 +1,7 @@
 import { ApiResponse, FlashcardList, QuizList, Summary } from "@/types/documentTypes";
 
 /** Base URL for the API endpoints */
-const API_BASE_URL = "http://localhost:8080";
+export const API_BASE_URL = "http://localhost:8080";
 
 /**
  * Uploads text content to the server for processing
