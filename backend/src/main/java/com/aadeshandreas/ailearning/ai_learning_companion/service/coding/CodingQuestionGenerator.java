@@ -1,6 +1,7 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.service.coding;
 
 import com.aadeshandreas.ailearning.ai_learning_companion.model.coding.CodingQuestion;
+import com.aadeshandreas.ailearning.ai_learning_companion.model.coding.Difficulty;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 
@@ -93,7 +94,7 @@ public interface CodingQuestionGenerator {
     CodingQuestion generateQuestion(
             @V("topicTitle") String topicTitle,
             @V("topicDescription") String topicDescription,
-            @V("difficulty") String difficulty,
+            @V("difficulty") Difficulty difficulty,
             @V("documentContext") String documentContext
     );
 }

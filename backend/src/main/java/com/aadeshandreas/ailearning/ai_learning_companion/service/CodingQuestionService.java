@@ -1,9 +1,6 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.service;
 
-import com.aadeshandreas.ailearning.ai_learning_companion.model.coding.CodingQuestion;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.coding.CodingTopic;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.coding.CodingTopicList;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.coding.ExecutionResult;
+import com.aadeshandreas.ailearning.ai_learning_companion.model.coding.*;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.DocumentRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.coding.CodingQuestionRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.coding.CodingTopicRepository;
@@ -60,7 +57,7 @@ public class CodingQuestionService {
      * @param difficulty The desired difficulty level (EASY, MEDIUM, HARD)
      * @return The generated CodingQuestion object
      */
-    public CodingQuestion generateCodingQuestion(int topicId, String difficulty) {
+    public CodingQuestion generateCodingQuestion(int topicId, Difficulty difficulty) {
         // Get the cached topics
         CodingTopicList topicList = codingTopicRepository.getCodingTopics();
         if (topicList == null || topicList.getTopics() == null) {
@@ -78,7 +75,7 @@ public class CodingQuestionService {
         if (selectedTopic == null) {
             throw new IllegalArgumentException("Topic with ID " + topicId + " not found");
         }
-        
+
         // Get document context
         String documentText = documentRepository.getDocumentText();
 

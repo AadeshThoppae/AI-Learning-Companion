@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/content")
+@RequestMapping("/api/coding")
 public class CodingController {
     private static final Logger logger = LoggerFactory.getLogger(CodingController.class);
     private final CodingQuestionService codingQuestionService;
@@ -66,6 +66,7 @@ public class CodingController {
     public ResponseEntity<ApiResponse<?>> generateCodingQuestion(
             @Valid @RequestBody CodingQuestionRequest request) {
         try {
+
             CodingQuestion question = codingQuestionService.generateCodingQuestion(
                     request.getTopicId(),
                     request.getDifficulty()
