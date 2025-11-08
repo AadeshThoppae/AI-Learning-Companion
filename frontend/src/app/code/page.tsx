@@ -4,8 +4,10 @@ import { useState } from 'react';
 import Split from '@uiw/react-split';
 import Editor from '@monaco-editor/react';
 import type { Monaco } from '@monaco-editor/react';
+import type { editor } from 'monaco-editor';
 import { leetcodeTheme } from '@/config/monaco/javaTheme';
 import { javaTokenizer } from '@/config/monaco/javaTokenizer';
+import { javaFormattingProvider } from '@/config/monaco/javaFormatter';
 
 export default function CodePage() {
     const [code, setCode] = useState(`import java.util.*;
@@ -18,6 +20,7 @@ class Solution {
     }
 }`);
     const [autocompleteEnabled, setAutocompleteEnabled] = useState(false);
+    const [editorInstance, setEditorInstance] = useState<editor.IStandaloneCodeEditor | null>(null);
 
     const handleEditorWillMount = (monaco: Monaco) => {
         // Define custom LeetCode-style theme
@@ -25,6 +28,19 @@ class Solution {
 
         // Set custom tokenizer for better syntax highlighting
         monaco.languages.setMonarchTokensProvider('java', javaTokenizer);
+
+        // Register Java formatting provider
+        monaco.languages.registerDocumentFormattingEditProvider('java', javaFormattingProvider);
+    };
+
+    const handleEditorDidMount = (editor: editor.IStandaloneCodeEditor) => {
+        setEditorInstance(editor);
+    };
+
+    const formatCode = () => {
+        if (editorInstance) {
+            editorInstance.getAction('editor.action.formatDocument')?.run();
+        }
     };
     return (
         <div className="h-screen bg-gray-900">
@@ -75,6 +91,13 @@ class Solution {
                                     </label>
                                 </div>
                                 <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={formatCode}
+                                        className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white rounded text-sm flex items-center gap-1"
+                                    >
+                                        <span>Format</span>
+                                        <span className="text-xs text-gray-300">(⇧⌥F)</span>
+                                    </button>
                                     <button className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
                                         Run Code
                                     </button>
@@ -91,6 +114,7 @@ class Solution {
                                     onChange={(value) => setCode(value || '')}
                                     theme="leetcode"
                                     beforeMount={handleEditorWillMount}
+                                    onMount={handleEditorDidMount}
                                     options={{
                                         minimap: { enabled: false },
                                         fontSize: 14,
@@ -102,6 +126,8 @@ class Solution {
                                         wordBasedSuggestions: autocompleteEnabled ? 'allDocuments' : 'off',
                                         tabCompletion: autocompleteEnabled ? 'on' : 'off',
                                         acceptSuggestionOnEnter: autocompleteEnabled ? 'on' : 'off',
+                                        formatOnPaste: true,
+                                        formatOnType: false,
                                     }}
                                 />
                             </div>
