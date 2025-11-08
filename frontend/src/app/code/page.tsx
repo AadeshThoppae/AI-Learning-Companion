@@ -211,7 +211,7 @@ class Solution {
             }`}
             style={{ width: "25%" }}
           >
-            <div className="flex items-center justify-between px-1 py-1 bg-[#333333]">
+            <div className="sticky top-0 z-10 flex items-center justify-between px-1 py-1 bg-[#333333]">
                 <span className="text-gray-300 text-sm font-bold flex items-center py-1 px-2 rounded hover:bg-[#434343] cursor-pointer">
                     <LuBookOpenText className="text-blue-500 mr-1" /> Description
                 </span>
