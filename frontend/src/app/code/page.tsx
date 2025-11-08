@@ -177,7 +177,7 @@ class Solution {
                   <button className="bg-[#262626] px-2 h-full text-gray-400 text-sm rounded-s hover:bg-[#333333] cursor-pointer">
                   <FaPlay/>
                   </button>
-                  <button className="flex items-center px-2 h-full bg-[#262626] text-green-500 text-sm font-bold rounded-e hover:bg-[#333333] cursor-pointer">
+                  <button className="flex items-center px-2 h-full bg-[#262626] text-blue-500 text-sm font-bold rounded-e hover:bg-[#333333] cursor-pointer">
                   <MdOutlineCloudUpload className="mr-2 text-base"/> Submit
                   </button>
               </div>
@@ -275,25 +275,36 @@ class Solution {
                         <div className="mb-2 space-y-1">
                           {codingQuestion.constraints.timeComplexity && (
                             <p className="text-gray-300">
-                              <strong>Time Complexity:</strong> <code className="bg-[#333333] text-green-400 px-1.5 py-0.5 rounded font-mono text-sm">{codingQuestion.constraints.timeComplexity}</code>
+                              <strong>Time Complexity:</strong> <code className="bg-[#333333] text-blue-500 px-1.5 py-0.5 rounded font-mono text-sm">{codingQuestion.constraints.timeComplexity}</code>
                             </p>
                           )}
                           {codingQuestion.constraints.spaceComplexity && (
                             <p className="text-gray-300">
-                              <strong>Space Complexity:</strong> <code className="bg-[#333333] text-green-400 px-1.5 py-0.5 rounded font-mono text-sm">{codingQuestion.constraints.spaceComplexity}</code>
+                              <strong>Space Complexity:</strong> <code className="bg-[#333333] text-blue-500 px-1.5 py-0.5 rounded font-mono text-sm">{codingQuestion.constraints.spaceComplexity}</code>
                             </p>
                           )}
                         </div>
                       )}
-                      <ul className="list-disc list-inside text-gray-300">
+                      <div className="space-y-1">
                         {codingQuestion.constraints.rules
                           .filter(rule => rule && rule.trim())
-                          .map((rule, idx) => (
-                          <li key={idx} className="text-gray-300">
-                            <MarkdownRenderer content={rule} inline />
-                          </li>
-                        ))}
-                      </ul>
+                          .map((rule, idx) => {
+                            // Check if rule looks like a code constraint (contains <=, >=, <, >, or starts with digit)
+                            const isCodeConstraint = /^[\d-]|[<>]=?/.test(rule);
+
+                            return isCodeConstraint ? (
+                              <div key={idx}>
+                                <code className="block bg-[#262626] text-gray-300 px-3 py-2 rounded font-mono text-sm border border-[#333333]">
+                                  {rule}
+                                </code>
+                              </div>
+                            ) : (
+                              <div key={idx}>
+                                <MarkdownRenderer content={rule} inline />
+                              </div>
+                            );
+                          })}
+                      </div>
                     </div>
                   )}
                 </>
@@ -321,7 +332,7 @@ class Solution {
                 >
                   <div className="flex items-center px-1 py-1">
                     <span className="text-gray-300 text-sm font-bold flex items-center py-1 px-2 rounded hover:bg-[#434343] cursor-pointer">
-                      <FaCode className="text-green-500 mr-1" /> Code
+                      <FaCode className="text-blue-500 mr-1" /> Code
                     </span>
                   </div>
 
@@ -383,14 +394,14 @@ class Solution {
                 >
                   <div className="flex items-center px-1 py-1 bg-[#333333]">
                     <span className="text-gray-300 text-sm font-bold flex items-center py-1 px-2 rounded hover:bg-[#434343] cursor-pointer">
-                      <FaRegSquareCheck className="text-green-500 mr-1"/> Testcase
+                      <FaRegSquareCheck className="text-blue-500 mr-1"/> Testcase
                     </span>
                     <span className="w-[1px] bg-[#606060] h-3" />
                     <span className="text-gray-300 text-sm font-bold flex items-center py-1 px-2 rounded hover:bg-[#434343] cursor-pointer">
-                      <FaPersonPraying className="text-green-500 mr-1"/> Test Result
+                      <FaPersonPraying className="text-blue-500 mr-1"/> Test Result
                     </span>
                   </div>
-                  <div className="p-4 font-mono text-sm text-green-400 flex-1 overflow-auto">
+                  <div className="p-4 font-mono text-sm text-indigo-600 flex-1 overflow-auto">
                     <div>$ Ready to run your code...</div>
                   </div>
                 </div>
