@@ -38,7 +38,7 @@ export const leetcodeTheme: editor.IStandaloneThemeData = {
 		{ token: "operator", foreground: "D4D4D4" },
 	],
 	colors: {
-		"editor.background": "#1E1E1E",
+		"editor.background": "#262626",
 		"editor.foreground": "#D4D4D4",
 		"editor.lineHighlightBackground": "#282828",
 		"editor.selectionBackground": "#264F78",
