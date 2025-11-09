@@ -1,6 +1,28 @@
 import { ApiResponse } from "@/types/documentTypes";
 import { API_BASE_URL } from "./documentService";
-import { CodeSubmission, CodingQuestion, CodingQuestionRequest, ExecutionResult } from "@/types/codingTypes";
+import {
+	CodeSubmission,
+	CodingQuestion,
+	CodingQuestionRequest,
+	CodingTopicList,
+	ExecutionResult,
+} from "@/types/codingTypes";
+
+export const getCodingTopics = async (): Promise<ApiResponse<CodingTopicList>> => {
+	const res = await fetch(`${API_BASE_URL}/api/coding/coding-topics`, {
+		method: "GET",
+		headers: { "Content-Type": "application/json" },
+		credentials: "include",
+	});
+
+	const result: ApiResponse<CodingTopicList> = await res.json();
+
+	if (!res.ok) {
+		throw new Error(result.message || "Failed to fetch coding topics");
+	}
+
+	return result;
+};
 
 export const getCodingQuestion = async (
 	codingQuestionRequest: CodingQuestionRequest

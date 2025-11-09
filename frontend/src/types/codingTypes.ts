@@ -33,9 +33,21 @@ export interface CodingQuestion {
 	constraints: Constraints;
 }
 
+export interface CodingTopic {
+	id: number;
+	title: string;
+	description: string;
+	difficulty: Difficulty;
+	keywords: string[];
+}
+
+export interface CodingTopicList {
+	topics: CodingTopic[];
+}
+
 export interface CodingQuestionRequest {
 	topicId: number;
-	difficulty: Difficulty;
+	regenerate?: boolean;
 }
 
 export interface CodeSubmission {
