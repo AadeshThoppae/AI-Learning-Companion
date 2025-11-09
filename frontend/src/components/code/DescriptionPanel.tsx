@@ -6,14 +6,12 @@ import { CodingQuestion } from "@/types/codingTypes";
 
 interface DescriptionPanelProps {
   codingQuestion: CodingQuestion | null;
-  loading: boolean;
   isSelected: boolean;
   onSelect: () => void;
 }
 
 export default function DescriptionPanel({
   codingQuestion,
-  loading,
   isSelected,
   onSelect,
 }: DescriptionPanelProps) {
@@ -31,9 +29,7 @@ export default function DescriptionPanel({
         </span>
       </div>
       <div className="p-6">
-        {loading ? (
-          <div className="text-gray-400">Loading question...</div>
-        ) : codingQuestion ? (
+        {codingQuestion ? (
           <>
             <h1 className="text-2xl font-bold mb-2 text-white">
               {codingQuestion.title}

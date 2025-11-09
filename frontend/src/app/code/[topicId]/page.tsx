@@ -18,6 +18,7 @@ import { CodingQuestion, ExecutionResult } from "@/types/codingTypes";
 import DescriptionPanel from "@/components/code/DescriptionPanel";
 import CodeEditorPanel from "@/components/code/CodeEditorPanel";
 import ConsolePanel from "@/components/code/ConsolePanel";
+import LoadingModal from "@/components/LoadingModal";
 
 export default function CodePage({ params }: { params: Promise<{ topicId: string }> }) {
 	const { topicId: topicIdString } = use(params);
@@ -273,7 +274,6 @@ class Solution {
 					{/* Left panel - Description */}
 					<DescriptionPanel
 						codingQuestion={codingQuestion}
-						loading={loading}
 						isSelected={selectedPanel === "description"}
 						onSelect={() => setSelectedPanel("description")}
 					/>
@@ -310,6 +310,12 @@ class Solution {
 					</div>
 				</Split>
 			</div>
+
+			{/* Loading Modal Overlay */}
+			<LoadingModal
+				isOpen={loading || regenerating}
+				message={regenerating ? "Regenerating question..." : "Generating question..."}
+			/>
 		</div>
 	);
 }
