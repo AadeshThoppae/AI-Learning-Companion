@@ -52,12 +52,13 @@ public class CodingQuestionService {
     }
 
     /**
-     * Generates a coding question for the selected topic and difficulty level.
+     * Generates or retrieves a coding question for the selected topic.
+     * The difficulty level is derived from the topic itself.
      * @param topicId The ID of the selected topic
-     * @param difficulty The desired difficulty level (EASY, MEDIUM, HARD)
-     * @return The generated CodingQuestion object
+     * @param regenerate If true, generates a new question even if one exists; if false, returns cached question
+     * @return The generated or cached CodingQuestion object
      */
-    public CodingQuestion generateCodingQuestion(int topicId, Difficulty difficulty) {
+    public CodingQuestion generateCodingQuestion(int topicId, boolean regenerate) {
         // Get the cached topics
         CodingTopicList topicList = codingTopicRepository.getCodingTopics();
         if (topicList == null || topicList.getTopics() == null) {
@@ -76,21 +77,29 @@ public class CodingQuestionService {
             throw new IllegalArgumentException("Topic with ID " + topicId + " not found");
         }
 
+        // Check if a question already exists for this topic
+        if (!regenerate) {
+            CodingQuestion existingQuestion = codingQuestionRepository.findByTopicId(topicId);
+            if (existingQuestion != null) {
+                return existingQuestion;
+            }
+        }
+
         // Get document context
         String documentText = documentRepository.getDocumentText();
 
-        // Generate the question
+        // Generate the question using the topic's difficulty
         CodingQuestion question = codingQuestionGenerator.generateQuestion(
                 selectedTopic.getTitle(),
                 selectedTopic.getDescription(),
-                difficulty,
+                selectedTopic.getDifficulty(),
                 documentText
         );
 
         // Set the topicId in the question
         question.setTopicId(topicId);
 
-        // Cache the question
+        // Cache the question (will replace existing if regenerating)
         codingQuestionRepository.save(question);
 
         return question;

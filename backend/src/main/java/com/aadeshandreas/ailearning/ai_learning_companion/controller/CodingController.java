@@ -55,9 +55,11 @@ public class CodingController {
     }
 
     /**
-     * Generates a coding question for the selected topic and difficulty level.
+     * Generates or retrieves a coding question for the selected topic.
+     * The difficulty level is derived from the topic itself.
+     * By default, returns cached question if one exists. Set regenerate=true to force new generation.
      *
-     * @param request The {@link CodingQuestionRequest} containing topicId and difficulty
+     * @param request The {@link CodingQuestionRequest} containing topicId and optional regenerate flag
      * @return A {@link ResponseEntity} wrapping a generic {@link ApiResponse}. On success,
      * the ApiResponse's data field will contain a {@link CodingQuestion} object.
      * On failure, it will contain an error message and code with null data.
@@ -69,7 +71,7 @@ public class CodingController {
 
             CodingQuestion question = codingQuestionService.generateCodingQuestion(
                     request.getTopicId(),
-                    request.getDifficulty()
+                    request.isRegenerate()
             );
             ApiResponse<CodingQuestion> successResponse = new ApiResponse<>("Success", "200_OK", question);
             return ResponseEntity.ok(successResponse);
