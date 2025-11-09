@@ -37,3 +37,26 @@ export interface CodingQuestionRequest {
 	topicId: number;
 	difficulty: Difficulty;
 }
+
+export interface CodeSubmission {
+	questionId: string;
+	code: string;
+}
+
+export interface TestResult {
+	testId: number;
+	passed: boolean;
+	input: string;
+	expectedOutput: string;
+	actualOutput: string;
+	error: string;
+}
+
+export interface ExecutionResult {
+	success: boolean;
+	passedTests: number;
+	totalTests: number;
+	results: TestResult[];
+	error: string;
+	executionTime: number;
+}
