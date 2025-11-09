@@ -21,7 +21,6 @@ import java.util.concurrent.*;
 public class CodeExecutor {
 
     private static final long TIMEOUT_MS = 2000; // 2 seconds per test case
-    private static final int MAX_OUTPUT_LENGTH = 10000; // Prevent memory issues
 
     /**
      * Executes user code against test cases.
@@ -202,18 +201,24 @@ public class CodeExecutor {
         result.setInput(testCase.getInput());
         result.setExpectedOutput(testCase.getExpectedOutput());
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        try {
-            // Parse method name and parameters from signature
+        try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
+            // Parse method name and parameter types from signature
             String methodName = extractMethodName(methodSignature);
-            Object[] args = parseTestInput(testCase.getInput());
+            Class<?>[] parameterTypes = extractParameterTypes(methodSignature);
+            Object[] args = parseTestInput(testCase.getInput(), parameterTypes);
 
             // Execute with timeout
             Future<Object> future = executor.submit(() -> {
                 try {
-                    Object instance = compiledClass.getDeclaredConstructor().newInstance();
-                    Method method = findMethod(compiledClass, methodName, args);
-                    return method.invoke(instance, args);
+                    Method method = findMethod(compiledClass, methodName, parameterTypes);
+
+                    // If method is static, invoke with null instance; otherwise create instance
+                    if (java.lang.reflect.Modifier.isStatic(method.getModifiers())) {
+                        return method.invoke(null, args);
+                    } else {
+                        Object instance = compiledClass.getDeclaredConstructor().newInstance();
+                        return method.invoke(instance, args);
+                    }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -241,8 +246,6 @@ public class CodeExecutor {
         } catch (Exception e) {
             result.setPassed(false);
             result.setError("Error: " + e.getMessage());
-        } finally {
-            executor.shutdownNow();
         }
 
         return result;
@@ -262,13 +265,94 @@ public class CodeExecutor {
     }
 
     /**
-     * Parses test input string into actual Java objects.
-     * This is a simplified version - you may need to expand based on your needs.
+     * Extracts parameter types from method signature.
+     * Example: "public static String foo(int a, long b)" -> [int.class, long.class]
      */
-    private Object[] parseTestInput(String input) {
-        // Simple parsing for common types
-        // For more complex types, you'd need a JSON parser
+    private Class<?>[] extractParameterTypes(String signature) {
+        // Extract parameter list from signature
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\(([^)]*)\\)");
+        java.util.regex.Matcher matcher = pattern.matcher(signature);
+
+        if (!matcher.find()) {
+            return new Class<?>[0];
+        }
+
+        String paramList = matcher.group(1).trim();
+        if (paramList.isEmpty()) {
+            return new Class<?>[0];
+        }
+
+        // Split parameters by comma (simple split - doesn't handle generic types perfectly)
+        String[] params = paramList.split(",");
+        List<Class<?>> types = new ArrayList<>();
+
+        for (String param : params) {
+            param = param.trim();
+            // Extract just the type (first word before the parameter name)
+            String[] parts = param.split("\\s+");
+            if (parts.length > 0) {
+                String typeName = parts[0].trim();
+                Class<?> type = getClassForTypeName(typeName);
+                if (type != null) {
+                    types.add(type);
+                }
+            }
+        }
+
+        return types.toArray(new Class<?>[0]);
+    }
+
+    /**
+     * Maps type name strings to Class objects.
+     */
+    private Class<?> getClassForTypeName(String typeName) {
+        return switch (typeName) {
+            case "int" -> int.class;
+            case "long" -> long.class;
+            case "double" -> double.class;
+            case "float" -> float.class;
+            case "boolean" -> boolean.class;
+            case "char" -> char.class;
+            case "byte" -> byte.class;
+            case "short" -> short.class;
+            case "String" -> String.class;
+            case "int[]" -> int[].class;
+            case "long[]" -> long[].class;
+            case "double[]" -> double[].class;
+            case "String[]" -> String[].class;
+            default -> {
+                // Try to load the class by name
+                try {
+                    yield Class.forName(typeName);
+                } catch (ClassNotFoundException e) {
+                    yield null;
+                }
+            }
+        };
+    }
+
+    /**
+     * Parses test input string into actual Java objects based on expected parameter types.
+     */
+    private Object[] parseTestInput(String input, Class<?>[] parameterTypes) {
         input = input.trim();
+
+        // Handle parameter assignments: "param1 = value1, param2 = value2"
+        if (input.contains("=")) {
+            String[] assignments = input.split(",");
+            List<Object> params = new ArrayList<>();
+
+            for (int i = 0; i < assignments.length; i++) {
+                String[] parts = assignments[i].split("=");
+                if (parts.length == 2) {
+                    String value = parts[1].trim();
+                    Class<?> expectedType = i < parameterTypes.length ? parameterTypes[i] : null;
+                    params.add(parseValueWithType(value, expectedType));
+                }
+            }
+
+            return params.toArray();
+        }
 
         // Handle arrays: "[1,2,3]"
         if (input.startsWith("[") && input.endsWith("]")) {
@@ -284,34 +368,106 @@ public class CodeExecutor {
             return new Object[]{arr};
         }
 
+        // Single value
+        Class<?> expectedType = parameterTypes.length > 0 ? parameterTypes[0] : null;
+        return new Object[]{parseValueWithType(input, expectedType)};
+    }
+
+    /**
+     * Parses a single value string into the appropriate Java type based on expected type.
+     */
+    private Object parseValueWithType(String value, Class<?> expectedType) {
+        value = value.trim();
+
+        // If no expected type, use heuristics
+        if (expectedType == null) {
+            return parseValueHeuristic(value);
+        }
+
+        // Parse based on expected type
+        if (expectedType == String.class) {
+            // Handle strings: "\"hello\"" -> "hello"
+            if (value.startsWith("\"") && value.endsWith("\"")) {
+                return value.substring(1, value.length() - 1);
+            }
+            return value;
+        } else if (expectedType == int.class || expectedType == Integer.class) {
+            return Integer.parseInt(value);
+        } else if (expectedType == long.class || expectedType == Long.class) {
+            // Remove trailing L/l if present
+            if (value.endsWith("L") || value.endsWith("l")) {
+                value = value.substring(0, value.length() - 1);
+            }
+            return Long.parseLong(value);
+        } else if (expectedType == double.class || expectedType == Double.class) {
+            return Double.parseDouble(value);
+        } else if (expectedType == float.class || expectedType == Float.class) {
+            return Float.parseFloat(value);
+        } else if (expectedType == boolean.class || expectedType == Boolean.class) {
+            return Boolean.parseBoolean(value);
+        } else if (expectedType == char.class || expectedType == Character.class) {
+            return value.charAt(0);
+        } else if (expectedType == byte.class || expectedType == Byte.class) {
+            return Byte.parseByte(value);
+        } else if (expectedType == short.class || expectedType == Short.class) {
+            return Short.parseShort(value);
+        }
+
+        // Fallback to heuristic parsing
+        return parseValueHeuristic(value);
+    }
+
+    /**
+     * Parses a value using heuristics when no type information is available.
+     */
+    private Object parseValueHeuristic(String value) {
+        value = value.trim();
+
         // Handle strings: "\"hello\""
-        if (input.startsWith("\"") && input.endsWith("\"")) {
-            return new Object[]{input.substring(1, input.length() - 1)};
+        if (value.startsWith("\"") && value.endsWith("\"")) {
+            return value.substring(1, value.length() - 1);
+        }
+
+        // Handle booleans
+        if (value.equals("true") || value.equals("false")) {
+            return Boolean.parseBoolean(value);
+        }
+
+        // Handle long integers (ends with L or l)
+        if (value.endsWith("L") || value.endsWith("l")) {
+            return Long.parseLong(value.substring(0, value.length() - 1));
+        }
+
+        // Handle doubles (contains decimal point)
+        if (value.contains(".")) {
+            return Double.parseDouble(value);
         }
 
         // Handle integers
         try {
-            return new Object[]{Integer.parseInt(input)};
+            return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            // Handle booleans
-            if (input.equals("true") || input.equals("false")) {
-                return new Object[]{Boolean.parseBoolean(input)};
-            }
+            // If all else fails, return as string
+            return value;
         }
-
-        return new Object[]{input};
     }
 
     /**
      * Finds the method in the class that matches the method name and parameter types.
      */
-    private Method findMethod(Class<?> clazz, String methodName, Object[] args) throws NoSuchMethodException {
-        for (Method method : clazz.getDeclaredMethods()) {
-            if (method.getName().equals(methodName) && method.getParameterCount() == args.length) {
-                return method;
+    private Method findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) throws NoSuchMethodException {
+        try {
+            // Try exact match first
+            return clazz.getDeclaredMethod(methodName, parameterTypes);
+        } catch (NoSuchMethodException e) {
+            // If exact match fails, try to find by name and parameter count
+            for (Method method : clazz.getDeclaredMethods()) {
+                if (method.getName().equals(methodName) && method.getParameterCount() == parameterTypes.length) {
+                    return method;
+                }
             }
+            throw new NoSuchMethodException("Method " + methodName + " not found with " + parameterTypes.length + " parameters");
         }
-        throw new NoSuchMethodException("Method " + methodName + " not found");
     }
 
     /**
