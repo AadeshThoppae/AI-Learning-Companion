@@ -37,3 +37,20 @@ export const testCode = async (codeSubmission: CodeSubmission): Promise<ApiRespo
 
 	return result;
 };
+
+export const submitCode = async (codeSubmission: CodeSubmission): Promise<ApiResponse<ExecutionResult>> => {
+	const res = await fetch(`${API_BASE_URL}/api/coding/coding-question/submit`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(codeSubmission),
+		credentials: "include",
+	});
+
+	const result: ApiResponse<ExecutionResult> = await res.json();
+
+	if (!res.ok) {
+		throw new Error(result.message || "Failed to test code");
+	}
+
+	return result;
+};
