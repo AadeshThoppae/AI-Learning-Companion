@@ -21,4 +21,6 @@ public interface InterviewGenerator extends ContentGenerator<Interview> {
             """)
     @Override
     Interview generate(@V("text") String text);
+
+
 }

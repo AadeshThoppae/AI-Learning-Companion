@@ -222,4 +222,39 @@ public class DocumentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
+
+    /**
+     * Grades a user's interview answer using AI
+     *
+     * @return A {@link ResponseEntity} wrapping a generic {@link ApiResponse}. On success,
+     * the ApiResponse's data field will contain a {@link InterviewResponse} object. On failure,
+     * it will contain an error message and code with null data.
+     */
+    @GetMapping(value = "/interview/grade")
+    public ResponseEntity<ApiResponse<?>> gradeInterviewAnswer(InterviewGradingRequest request) {
+        try {
+            InterviewResponse q = documentService.gradeInterviewAnswer(request.getQuestionId(),request.getUserAnswer());
+            ApiResponse<InterviewResponse> successResponse = new ApiResponse<>("Success", "200_OK", q);
+            return ResponseEntity.ok(successResponse);
+        } catch (IllegalStateException e) {
+            logger.warn("Interview grading failed: {}", e.getMessage());
+
+            ApiResponse<Void> errorResponse = new ApiResponse<>(
+                    e.getMessage(),
+                    "INTERVIEW_NOT_FOUND",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        } catch (Exception e) {
+            logger.error("Error grading interview answer", e);
+
+            ApiResponse<Void> errorResponse = new ApiResponse<>(
+                    "Unable to grade answer",
+                    "INTERNAL_SERVER_ERROR",
+                    null
+            );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
 }

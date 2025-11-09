@@ -1,9 +1,6 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.service;
 
-import com.aadeshandreas.ailearning.ai_learning_companion.model.FlashcardList;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Interview;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Quiz;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Summary;
+import com.aadeshandreas.ailearning.ai_learning_companion.model.*;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.*;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
@@ -37,6 +34,7 @@ public class DocumentService {
     private final QuizGenerator quizGenerator;
     private final InterviewGenerator interviewGenerator;
     private final InterviewRepository interviewRepository;
+    private final InterviewAnswerGrader interviewAnswerGrader;
 
     /**
      * Constructs the DocumentService with all its required dependencies, which are
@@ -58,7 +56,7 @@ public class DocumentService {
             QuizRepository quizRepository,
             QuizGenerator quizGenerator,
             InterviewRepository interviewRepository,
-            InterviewGenerator interviewGenerator) {
+            InterviewGenerator interviewGenerator, InterviewAnswerGrader interviewAnswerGrader) {
 
         this.documentRepository = documentRepository;
         this.summaryRepository = summaryRepository;
@@ -69,6 +67,7 @@ public class DocumentService {
         this.quizGenerator = quizGenerator;
         this.interviewGenerator = interviewGenerator;
         this.interviewRepository = interviewRepository;
+        this.interviewAnswerGrader = interviewAnswerGrader;
     }
 
     /**
@@ -170,5 +169,22 @@ public class DocumentService {
         Interview interview = interviewGenerator.generate(docText);
         interviewRepository.setInterview(interview);
         return interview;
+    }
+
+    public InterviewResponse gradeInterviewAnswer(Integer questionId, String userAnswer) throws Exception {
+        Interview interview = interviewRepository.getInterview();
+
+        if(interview == null || interview.getQuestions() == null || interview.getQuestions().isEmpty()){
+            throw new Exception("No interview found! please generate Interview first");
+        }
+
+        InterviewQuestion question = interview.getQuestions().stream()
+                .filter(q -> q.getId() == questionId)
+                .findFirst().orElseThrow();
+
+        InterviewResponse response = interviewAnswerGrader.gradeAnswer(question.getQuestion(),question.getAnswer(),userAnswer);
+
+        response.setUserAnswer(userAnswer);
+        return response;
     }
 }
