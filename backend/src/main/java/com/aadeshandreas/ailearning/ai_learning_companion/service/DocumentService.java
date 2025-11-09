@@ -65,7 +65,7 @@ public class DocumentService {
 
     /**
      * Parses an uploaded PDF file, extracts its text, and stores it in the repository
-     * for the current user session.
+     * for the current user session. Clears all cached content.
      *
      * @param pdfFile       The PDF file uploaded by the client.
      * @throws IOException  if there is an error reading or parsing the file.
@@ -81,6 +81,7 @@ public class DocumentService {
             Document document = FileSystemDocumentLoader.loadDocument(tempFile, new ApachePdfBoxDocumentParser());
 
             documentRepository.setDocumentText(document.text());
+            clearCache();
 
         } finally {
             // Ensure the temporary file is deleted even if an error occurs
@@ -97,11 +98,13 @@ public class DocumentService {
         clearCache();
     }
     /**
-     * clears cached summaries/flashcards/quizzes/coding topics so when new content is uploaded, we get a fresh AI generation
+     * clears cached summaries/flashcards/quizzes/coding topics/coding questions so when new content is uploaded, we get a fresh AI generation
      */
     private void clearCache() {
         summaryRepository.setSummary(null);
         flashcardRepository.setFlashcardList(null);
         quizRepository.setQuiz(null);
+        codingTopicRepository.setCodingTopics(null);
+        codingQuestionRepository.clear();
     }
 }
