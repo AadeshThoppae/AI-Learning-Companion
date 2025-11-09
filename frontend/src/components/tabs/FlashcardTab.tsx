@@ -1,6 +1,6 @@
 'use client'
 
-import { getFlashcards } from "@/services/documentService";
+import { getFlashcards } from "@/services/contentGenerationService";
 import { Flashcard as FlashcardType } from "@/types/documentTypes";
 import { useState } from "react";
 import Flashcard from "@/components/Flashcard";

@@ -1,6 +1,6 @@
 'use client'
 
-import { getSummary } from "@/services/documentService";
+import { getSummary } from "@/services/contentGenerationService";
 import { Summary } from "@/types/documentTypes";
 import { useEffect } from "react";
 import MarkdownRenderer from "../MarkdownRenderer";

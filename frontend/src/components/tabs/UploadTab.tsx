@@ -1,4 +1,5 @@
-import { getSummary, uploadPDF, uploadText } from "@/services/documentService";
+import { uploadPDF, uploadText } from "@/services/documentService";
+import { getSummary } from "@/services/contentGenerationService";
 import { Summary } from "@/types/documentTypes";
 import { useState } from "react";
 

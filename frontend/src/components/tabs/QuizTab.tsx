@@ -3,7 +3,7 @@
 import { Quiz as QuizType } from "@/types/documentTypes";
 import { useState } from "react";
 import Quiz from "../Quiz";
-import { getQuizzes } from "@/services/documentService";
+import { getQuizzes } from "@/services/contentGenerationService";
 
 /**
  * Props interface for the QuizTab component
