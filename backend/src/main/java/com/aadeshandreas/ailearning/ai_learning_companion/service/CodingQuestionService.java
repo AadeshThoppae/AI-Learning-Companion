@@ -1,9 +1,11 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.service;
 
 import com.aadeshandreas.ailearning.ai_learning_companion.model.coding.*;
+import com.aadeshandreas.ailearning.ai_learning_companion.model.content.Summary;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.DocumentRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.coding.CodingQuestionRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.coding.CodingTopicRepository;
+import com.aadeshandreas.ailearning.ai_learning_companion.repository.content.SummaryRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.coding.CodeExecutor;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.coding.CodingQuestionGenerator;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.coding.CodingTopicExtractor;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class CodingQuestionService {
     private final CodingTopicRepository codingTopicRepository;
     private final DocumentRepository documentRepository;
+    private final SummaryRepository summaryRepository;
     private final CodingQuestionRepository codingQuestionRepository;
     private final CodingTopicExtractor codingTopicExtractor;
     private final CodingQuestionGenerator codingQuestionGenerator;
@@ -23,6 +26,7 @@ public class CodingQuestionService {
     public CodingQuestionService(
             CodingTopicRepository codingTopicRepository,
             DocumentRepository documentRepository,
+            SummaryRepository summaryRepository,
             CodingQuestionRepository codingQuestionRepository,
             CodingTopicExtractor codingTopicExtractor,
             CodingQuestionGenerator codingQuestionGenerator,
@@ -30,6 +34,7 @@ public class CodingQuestionService {
     ) {
         this.codingTopicRepository = codingTopicRepository;
         this.documentRepository = documentRepository;
+        this.summaryRepository = summaryRepository;
         this.codingQuestionRepository = codingQuestionRepository;
         this.codingTopicExtractor = codingTopicExtractor;
         this.codingQuestionGenerator = codingQuestionGenerator;
@@ -85,15 +90,32 @@ public class CodingQuestionService {
             }
         }
 
-        // Get document context
-        String documentText = documentRepository.getDocumentText();
+        // Get summary context (more concise than full document)
+        Summary summary = summaryRepository.getSummary();
+        String summaryContext;
+        if (summary != null) {
+            // Format summary as context
+            StringBuilder sb = new StringBuilder();
+            if (summary.getTitle() != null) {
+                sb.append("Document Title: ").append(summary.getTitle()).append("\n\n");
+            }
+            if (summary.getKeyPoints() != null && !summary.getKeyPoints().isEmpty()) {
+                sb.append("Key Points:\n");
+                for (String keyPoint : summary.getKeyPoints()) {
+                    sb.append("- ").append(keyPoint).append("\n");
+                }
+            }
+            summaryContext = sb.toString();
+        } else {
+            throw new IllegalStateException("No Summary found. Please generate summary first.");
+        }
 
         // Generate the question using the topic's difficulty
         CodingQuestion question = codingQuestionGenerator.generateQuestion(
                 selectedTopic.getTitle(),
                 selectedTopic.getDescription(),
                 selectedTopic.getDifficulty(),
-                documentText
+                summaryContext
         );
 
         // Set the topicId in the question

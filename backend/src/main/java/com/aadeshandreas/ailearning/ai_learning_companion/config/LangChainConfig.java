@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Duration;
+
 /**
  * Spring {@code @Configuration} class responsible for setting up and configuring
  * the primary LangChain4j {@link ChatModel} bean for the application.
@@ -50,6 +52,7 @@ public class LangChainConfig {
         return GoogleAiGeminiChatModel.builder()
                 .apiKey(apiKey)
                 .modelName(modelName)
+                .timeout(Duration.ofSeconds(180)) // 3 minutes for complex code generation tasks
                 .build();
     }
 
