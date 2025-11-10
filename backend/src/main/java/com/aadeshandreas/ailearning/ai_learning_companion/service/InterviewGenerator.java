@@ -15,7 +15,7 @@ public interface InterviewGenerator extends ContentGenerator<Interview> {
      */
     @UserMessage("""
             Given the following text, generate 3 interview style questions and answers based on the main concepts, terms and ideas.
-            For each question, generate what a perfect interview style answer that demonstrates complete understanding of the topic.
+            For each question, generate a perfect interview style answer that demonstrates complete understanding of the topic.
             The language should be at the same level as the given text.
             Text: {{text}}
             """)
