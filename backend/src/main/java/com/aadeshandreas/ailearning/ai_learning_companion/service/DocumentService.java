@@ -171,20 +171,26 @@ public class DocumentService {
         return interview;
     }
 
-    public InterviewResponse gradeInterviewAnswer(Integer questionId, String userAnswer) throws Exception {
+    /**
+     * Grades User's interview question answer
+     * @param request contains question ID, answer to send to grader
+     * @return graded response containing score, strengths, weaknesses, etc.
+     * @throws Exception for edge case errors
+     */
+    public InterviewResponse gradeInterviewAnswer(InterviewGradingRequest request) throws Exception {
         Interview interview = interviewRepository.getInterview();
-
+        System.out.println(request.getUserAnswer());
         if(interview == null || interview.getQuestions() == null || interview.getQuestions().isEmpty()){
             throw new Exception("No interview found! please generate Interview first");
         }
 
         InterviewQuestion question = interview.getQuestions().stream()
-                .filter(q -> q.getId() == questionId)
+                .filter(q -> q.getId() == request.getQuestionId())
                 .findFirst().orElseThrow();
 
-        InterviewResponse response = interviewAnswerGrader.gradeAnswer(question.getQuestion(),question.getAnswer(),userAnswer);
+        InterviewResponse response = interviewAnswerGrader.gradeAnswer(question.getQuestion(),question.getAnswer(),request.getUserAnswer());
 
-        response.setUserAnswer(userAnswer);
+        response.setUserAnswer(request.getUserAnswer());
         return response;
     }
 }
