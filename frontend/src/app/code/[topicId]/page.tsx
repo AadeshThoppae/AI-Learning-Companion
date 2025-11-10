@@ -43,6 +43,7 @@ class Solution {
 	const [testing, setTesting] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
 	const [regenerating, setRegenerating] = useState(false);
+	const hasFetchedQuestion = useRef(false);
 
 	const handleEditorWillMount = (monaco: Monaco) => {
 		monaco.editor.defineTheme("leetcode", leetcodeTheme);
@@ -158,6 +159,14 @@ class Solution {
 
 	// Fetch coding question on page load
 	useEffect(() => {
+		// Prevent duplicate fetches in dev mode
+		if (hasFetchedQuestion.current) return;
+
+		// Mark as fetched IMMEDIATELY to prevent race conditions
+		hasFetchedQuestion.current = true;
+
+		const abortController = new AbortController();
+
 		const fetchCodingQuestion = async () => {
 			try {
 				setLoading(true);
@@ -166,18 +175,27 @@ class Solution {
 					topicId: topicId,
 				});
 
+				// Update state if we got valid data
 				if (response.data) {
 					setCodingQuestion(response.data);
 					setCode(response.data.starterCode);
 				}
 			} catch (error) {
-				console.error("Failed to fetch coding question:", error);
+				// Only log errors if not aborted
+				if (!abortController.signal.aborted) {
+					console.error("Failed to fetch coding question:", error);
+				}
 			} finally {
+				// Always clear loading state
 				setLoading(false);
 			}
 		};
 
 		fetchCodingQuestion();
+
+		return () => {
+			abortController.abort();
+		};
 	}, [topicId]);
 
 	const handleSplitChange = () => {

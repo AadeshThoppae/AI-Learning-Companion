@@ -2,7 +2,7 @@
 
 import { getSummary } from "@/services/contentGenerationService";
 import { Summary } from "@/types/documentTypes";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import MarkdownRenderer from "../MarkdownRenderer";
 
@@ -28,10 +28,17 @@ interface SummaryTabProps {
  */
 export default function SummaryTab({ summary, isLoading, setSummary, setIsLoading, setError, setActiveTab, handleReset }: SummaryTabProps) {
     const router = useRouter();
+    const hasFetchedSummary = useRef(false);
 
     // Fetch summary on load
     useEffect(() => {
-        if (summary) return; // If summary already exists, do not fetch again
+        // If summary already exists or we've already fetched, do not fetch again
+        if (summary || hasFetchedSummary.current) return;
+
+        // Mark as fetched IMMEDIATELY to prevent race conditions
+        hasFetchedSummary.current = true;
+
+        const abortController = new AbortController();
 
         /**
          * Asynchronous function to fetch summary from the API
@@ -39,21 +46,31 @@ export default function SummaryTab({ summary, isLoading, setSummary, setIsLoadin
          */
         const fetchSummary = async () => {
             setIsLoading(true);
+
             try {
                 const existingSummary = await getSummary();
+                // Update state if we got valid data
                 if (existingSummary) {
                     setSummary(existingSummary.data);
                 }
             } catch (err) {
-                console.error("Failed to fetch summary:", err);
-                setError('Could not load existing summary.');
+                // Only log errors and update error state if not aborted
+                if (!abortController.signal.aborted) {
+                    console.error("Failed to fetch summary:", err);
+                    setError('Could not load existing summary.');
+                }
             } finally {
+                // Always clear loading state
                 setIsLoading(false);
             }
         }
 
         fetchSummary();
-    }, [setError, setIsLoading, setSummary, summary]);
+
+        return () => {
+            abortController.abort();
+        };
+    }, [summary, setSummary, setIsLoading, setError]);
 
     return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 mx-auto w-2/3">

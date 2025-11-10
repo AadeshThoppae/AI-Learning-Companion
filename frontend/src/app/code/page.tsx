@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getCodingTopics } from "@/services/codingService";
 import { CodingTopic } from "@/types/codingTypes";
 import Link from "next/link";
@@ -12,24 +12,43 @@ export default function CodingTopicsPage() {
 	const [topics, setTopics] = useState<CodingTopic[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const hasFetchedTopics = useRef(false);
 
 	useEffect(() => {
+		// Prevent duplicate fetches in dev mode
+		if (hasFetchedTopics.current) return;
+
+		// Mark as fetched IMMEDIATELY to prevent race conditions
+		hasFetchedTopics.current = true;
+
+		const abortController = new AbortController();
+
 		const fetchTopics = async () => {
 			try {
 				setLoading(true);
+
 				const response = await getCodingTopics();
+				// Update state if we got valid data
 				if (response.data) {
 					setTopics(response.data.topics);
 				}
 			} catch (err) {
-				console.error("Failed to fetch coding topics:", err);
-				setError(err instanceof Error ? err.message : "Failed to fetch coding topics");
+				// Only log errors and update error state if not aborted
+				if (!abortController.signal.aborted) {
+					console.error("Failed to fetch coding topics:", err);
+					setError(err instanceof Error ? err.message : "Failed to fetch coding topics");
+				}
 			} finally {
+				// Always clear loading state
 				setLoading(false);
 			}
 		};
 
 		fetchTopics();
+
+		return () => {
+			abortController.abort();
+		};
 	}, []);
 
 	const getDifficultyColor = (difficulty: string) => {
