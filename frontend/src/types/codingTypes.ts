@@ -68,7 +68,7 @@ export interface ExecutionResult {
 	success: boolean;
 	passedTests: number;
 	totalTests: number;
-	results: TestResult[];
+	results: TestResult[] | null;
 	error: string;
 	executionTime: number;
 }

@@ -83,7 +83,7 @@ class Solution {
 				success: false,
 				passedTests: 0,
 				totalTests: 0,
-				results: [],
+				results: null,
 				error: error instanceof Error ? error.message : "Failed to test code",
 				executionTime: 0,
 			});
@@ -116,7 +116,7 @@ class Solution {
 				success: false,
 				passedTests: 0,
 				totalTests: 0,
-				results: [],
+				results: null,
 				error: error instanceof Error ? error.message : "Failed to submit code",
 				executionTime: 0,
 			});
@@ -199,6 +199,11 @@ class Solution {
 
 	return (
 		<div className="h-screen p-2 flex flex-col">
+			<style jsx global>{`
+				.w-split:not(.dragging) > .w-split-pane {
+					transition: none !important;
+				}
+			`}</style>
 			<div className="h-9 px-4 flex items-center pb-2">
 			<div className="flex-1 flex items-center gap-3">
 				<Link

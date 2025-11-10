@@ -117,12 +117,12 @@ export default function ConsolePanel({
               {executionResult.error && (
                 <div className="bg-red-900/20 border border-red-500/50 rounded p-3">
                   <div className="text-red-400 font-semibold mb-1">Error:</div>
-                  <div className="text-red-300 text-xs">{executionResult.error}</div>
+                  <div className="text-red-300 text-xs whitespace-pre-wrap">{executionResult.error}</div>
                 </div>
               )}
 
               {/* Test results */}
-              {executionResult.results.map((result, index) => (
+              {executionResult.results && executionResult.results.map((result, index) => (
                 <div
                   key={result.testId}
                   className={`border rounded p-3 ${
