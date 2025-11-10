@@ -1,8 +1,6 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.config;
 
-import com.aadeshandreas.ailearning.ai_learning_companion.service.FlashcardGenerator;
-import com.aadeshandreas.ailearning.ai_learning_companion.service.QuizGenerator;
-import com.aadeshandreas.ailearning.ai_learning_companion.service.Summarizer;
+import com.aadeshandreas.ailearning.ai_learning_companion.service.*;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel;
 import dev.langchain4j.service.AiServices;
@@ -84,6 +82,30 @@ public class LangChainConfig {
     @Bean
     public QuizGenerator quizGenerator(ChatModel chatModel) {
         return AiServices.create(QuizGenerator.class, chatModel);
+    }
+
+    /**
+     * Creates the {@link com.aadeshandreas.ailearning.ai_learning_companion.service.InterviewGenerator} AI Service bean.
+     * LangChain4j will create a dynamic implementation of the InterviewGenerator interface.
+     *
+     * @param chatModel The configured {@link ChatModel} bean to use for the AI calls.
+     * @return A ready-to-use instance of the QuizGenerator service.
+     */
+    @Bean
+    public InterviewGenerator interviewGenerator(ChatModel chatModel) {
+        return AiServices.create(InterviewGenerator.class, chatModel);
+    }
+
+    /**
+     * Creates the {@link com.aadeshandreas.ailearning.ai_learning_companion.service.InterviewAnswerGrader} AI Service bean.
+     * LangChain4j will create a dynamic implementation of the InterviewAnswerGrader interface.
+     *
+     * @param chatModel The configured {@link ChatModel} bean to use for the AI calls.
+     * @return A ready-to-use instance of the QuizGenerator service.
+     */
+    @Bean
+    public InterviewAnswerGrader interviewAnswerGrader(ChatModel chatModel) {
+        return AiServices.create(InterviewAnswerGrader.class, chatModel);
     }
 
 }

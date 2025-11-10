@@ -1,6 +1,5 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.service;
 
-import com.aadeshandreas.ailearning.ai_learning_companion.model.FlashcardList;
 import com.aadeshandreas.ailearning.ai_learning_companion.model.Quiz;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;

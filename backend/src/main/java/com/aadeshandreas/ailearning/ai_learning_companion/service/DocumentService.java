@@ -1,12 +1,7 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.service;
 
-import com.aadeshandreas.ailearning.ai_learning_companion.model.FlashcardList;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Quiz;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Summary;
-import com.aadeshandreas.ailearning.ai_learning_companion.repository.DocumentRepository;
-import com.aadeshandreas.ailearning.ai_learning_companion.repository.FlashcardRepository;
-import com.aadeshandreas.ailearning.ai_learning_companion.repository.QuizRepository;
-import com.aadeshandreas.ailearning.ai_learning_companion.repository.SummaryRepository;
+import com.aadeshandreas.ailearning.ai_learning_companion.model.*;
+import com.aadeshandreas.ailearning.ai_learning_companion.repository.*;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
@@ -37,6 +32,9 @@ public class DocumentService {
     private final FlashcardGenerator flashcardGenerator;
     private final QuizRepository quizRepository;
     private final QuizGenerator quizGenerator;
+    private final InterviewGenerator interviewGenerator;
+    private final InterviewRepository interviewRepository;
+    private final InterviewAnswerGrader interviewAnswerGrader;
 
     /**
      * Constructs the DocumentService with all its required dependencies, which are
@@ -55,7 +53,11 @@ public class DocumentService {
             FlashcardRepository flashcardRepository,
             Summarizer summarizer,
             FlashcardGenerator flashcardGenerator,
-            QuizRepository quizRepository, QuizGenerator quizGenerator) {
+            QuizRepository quizRepository,
+            QuizGenerator quizGenerator,
+            InterviewRepository interviewRepository,
+            InterviewGenerator interviewGenerator, InterviewAnswerGrader interviewAnswerGrader) {
+
         this.documentRepository = documentRepository;
         this.summaryRepository = summaryRepository;
         this.flashcardRepository = flashcardRepository;
@@ -63,6 +65,9 @@ public class DocumentService {
         this.flashcardGenerator = flashcardGenerator;
         this.quizRepository = quizRepository;
         this.quizGenerator = quizGenerator;
+        this.interviewGenerator = interviewGenerator;
+        this.interviewRepository = interviewRepository;
+        this.interviewAnswerGrader = interviewAnswerGrader;
     }
 
     /**
@@ -135,7 +140,10 @@ public class DocumentService {
         flashcardRepository.setFlashcardList(flashcardList);
         return flashcardList;
     }
-
+    /**
+     * Generates Quiz from the currently stored document, using a cache.
+     * @return The generated or cached Quiz object.
+     */
     public Quiz generateQuiz(){
         if (quizRepository.getQuiz() != null){
             return quizRepository.getQuiz();
@@ -146,5 +154,37 @@ public class DocumentService {
         quizRepository.setQuiz(quiz);
         return quiz;
 
+    }
+
+    /**
+     * Generates Interview from the currently stored document, using a cache.
+     * @return The generated or cached Interview object.
+     */
+    public Interview generateInterview(){
+        if(interviewRepository.getInterview() != null){
+            return interviewRepository.getInterview();
+        }
+
+        String docText = documentRepository.getDocumentText();
+        Interview interview = interviewGenerator.generate(docText);
+        interviewRepository.setInterview(interview);
+        return interview;
+    }
+
+    public InterviewResponse gradeInterviewAnswer(Integer questionId, String userAnswer) throws Exception {
+        Interview interview = interviewRepository.getInterview();
+
+        if(interview == null || interview.getQuestions() == null || interview.getQuestions().isEmpty()){
+            throw new Exception("No interview found! please generate Interview first");
+        }
+
+        InterviewQuestion question = interview.getQuestions().stream()
+                .filter(q -> q.getId() == questionId)
+                .findFirst().orElseThrow();
+
+        InterviewResponse response = interviewAnswerGrader.gradeAnswer(question.getQuestion(),question.getAnswer(),userAnswer);
+
+        response.setUserAnswer(userAnswer);
+        return response;
     }
 }
