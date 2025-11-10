@@ -8,8 +8,7 @@ import dev.langchain4j.service.V;
 public interface InterviewAnswerGrader extends ContentGenerator<InterviewResponse >{
     /**
      * Grades a user's interview answer by comparing it to the perfect answer and the original
-     * question context. This method will be automatically implemented by LangChain4j - you do NOT
-     * to write the implementation.
+     * question context. This method will be automatically implemented by LangChain4j
      *
      * @param question the interview question that was asked
      * @param answer the model answer demonstrating complete understanding
