@@ -7,7 +7,8 @@ import SummaryTab from "@/components/tabs/SummaryTab";
 import Tabs from "@/components/tabs/Tabs";
 import UploadTab from "@/components/tabs/UploadTab";
 import { Flashcard, Quiz, Summary } from "@/types/documentTypes";
-import { useState} from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 /**
  * Home component - Main page of the AI Learning Companion application
@@ -17,6 +18,7 @@ import { useState} from "react";
  * @returns JSX element containing the complete application interface
  */
 export default function Home() {
+    const router = useRouter();
     const [notes, setNotes] = useState('');
     const [summary, setSummary] = useState<Summary | null>(null);
     const [file, setFile] = useState<File | null>(null);
@@ -26,7 +28,7 @@ export default function Home() {
     const [activeTab, setActiveTab] = useState('Upload');
     const [error, setError] = useState<string>('');
 
-    const tabs = ['Upload','Summary','Flashcards', 'Quiz'];
+    const tabs = ['Upload','Summary','Flashcards', 'Quiz', 'Code Practice'];
 
     /**
      * Resets all application state to initial values
@@ -41,6 +43,16 @@ export default function Home() {
         setError('');
 
     }
+
+    /**
+     * Handle navigation to Code Practice page when that tab is clicked
+     */
+    useEffect(() => {
+        if (activeTab === 'Code Practice') {
+            router.push('/code');
+        }
+    }, [activeTab, router]);
+
     return (
     <div className="font-sans items-center justify-items-center min-h-screen p-8 gap-16 w-full">
         {/* Error notification toast */}

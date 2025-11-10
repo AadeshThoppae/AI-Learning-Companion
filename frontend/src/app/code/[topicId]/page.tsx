@@ -295,6 +295,7 @@ class Solution {
 									handleEditorWillMount={handleEditorWillMount}
 									handleEditorDidMount={handleEditorDidMount}
 									formatCode={formatCode}
+									starterCode={codingQuestion?.starterCode || code}
 								/>
 							}
 							bottomContent={

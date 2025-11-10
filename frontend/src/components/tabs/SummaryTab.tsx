@@ -3,6 +3,7 @@
 import { getSummary } from "@/services/contentGenerationService";
 import { Summary } from "@/types/documentTypes";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import MarkdownRenderer from "../MarkdownRenderer";
 
 /**
@@ -26,6 +27,7 @@ interface SummaryTabProps {
  * @returns JSX element containing the summary interface with key points and action buttons
  */
 export default function SummaryTab({ summary, isLoading, setSummary, setIsLoading, setError, setActiveTab, handleReset }: SummaryTabProps) {
+    const router = useRouter();
 
     // Fetch summary on load
     useEffect(() => {
@@ -99,7 +101,10 @@ export default function SummaryTab({ summary, isLoading, setSummary, setIsLoadin
                     <button className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 cursor-pointer">
                         Create Quiz
                     </button>
-                    <button className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 cursor-pointer">
+                    <button
+                        className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 cursor-pointer"
+                        onClick={() => router.push('/code')}
+                    >
                         Coding Problems
                     </button>
                 </div>
