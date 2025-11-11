@@ -115,7 +115,7 @@ export default function InterviewTab({
                     const newMap = new Map(prev);
                     newMap.set(questionId,res.data!);
                     return newMap;
-                })
+                });
             }
         }catch(e){
             setError("failed to grade answer");
