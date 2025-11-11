@@ -104,14 +104,12 @@ export default function InterviewTab({
         }
 
         setGradingQuestionId(questionId);
-        console.log(questionId);
         setError('');
 
         try {
             const res = await getInterviewGrading({
                 questionId,userAnswer:userAnswer?.trim()
             });
-            console.log(res);
             if(res.data){
                 setaiGradings(prev => {
                     const newMap = new Map(prev);
