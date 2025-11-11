@@ -1,7 +1,8 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.service;
 
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Interview;
 import com.aadeshandreas.ailearning.ai_learning_companion.model.InterviewResponse;
+import com.aadeshandreas.ailearning.ai_learning_companion.service.generation.ContentGenerator;
+
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 
