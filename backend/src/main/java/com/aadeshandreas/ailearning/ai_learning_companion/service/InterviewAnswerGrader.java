@@ -29,7 +29,7 @@ public interface InterviewAnswerGrader extends ContentGenerator<InterviewRespons
             3. Specific strengths in their response
             4. Concrete suggestions for improvement
             
-            Become encouraging but honest. Consider: 
+            Be encouraging but honest. Consider: 
             - Accuracy and completeness of concepts
             - Specific strengths in their response
             - Use of relevant examples or details
