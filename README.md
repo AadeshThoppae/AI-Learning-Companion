@@ -97,10 +97,20 @@ We provided our existing code snippet, and Copilot generated a solid solution fo
 ##### Reflection:
 ChatGPT is great at writing, so it naturally produced detailed and well-structured JavaDoc comments. However, the generated documentation was often too long and more detailed than necessary. We used its output as a solid draft and then refined it to match our project’s style and level of detail.
 
+##### Prompt 3:
+> "I need help organizing my project structure to follow SOLID principles. How should I split this large component file into smaller, more maintainable modules?"
+##### Reflection:
+AI tools (ChatGPT and Claude) were instrumental in helping us refactor and organize our codebase to follow SOLID principles. The AI provided clear suggestions on how to break down large files into smaller, focused modules with single responsibilities. While the overall architectural guidance was excellent, we had to manually adjust some of the suggested file structures to better match our existing project conventions and ensure proper separation of concerns. The AI gave us a good starting point, but we refined the implementation based on our specific use cases.
+
+##### Prompt 4:
+> "I'm getting an error when executing code in my code executor component. The code runs but the output isn't displaying correctly. Here's the error and my current implementation..."
+##### Reflection:
+Debugging the code executor was one of the most challenging parts of the project, and AI tools were extensively used to troubleshoot issues. We used ChatGPT and Claude to help identify problems with state management, output capture, and asynchronous execution handling. The AI was particularly helpful in suggesting different approaches to capture console output and handle errors. However, many of the initial suggestions needed significant debugging and manual adjustments because the AI couldn't fully understand the context of our Monaco Editor integration and the specific execution environment. We iterated multiple times, using AI feedback as a guide while manually testing and refining the solution.
+
 ##### GitHub Copilot for PR Drafts and Reviews
 
 ##### Reflection:
-We used GitHub Copilot’s built-in GitHub integration to assist with pull requests across multiple PRs. For example, in PR [#14](https://github.com/AadeshThoppae/AI-Learning-Companion/pull/14), we clicked “Write draft summary” to generate a clear pull request description and “Request code review” to let Copilot highlight minor typos and small code improvements before the human review. This feature helped streamline the review process, reduce trivial corrections, and still allowed us to verify and adjust all changes manually.
+We used GitHub Copilot's built-in GitHub integration to assist with pull requests across multiple PRs. For example, in PR [#14](https://github.com/AadeshThoppae/AI-Learning-Companion/pull/14), we clicked "Write draft summary" to generate a clear pull request description and "Request code review" to let Copilot highlight minor typos and small code improvements before the human review. This feature helped streamline the review process, reduce trivial corrections, and still allowed us to verify and adjust all changes manually.
 
 ## Tutorials and External References
 - Card Flip Animation Tutorial: [A Card Flip with Tailwind](https://www.telerik.com/blogs/card-flip-tailwind)
@@ -111,6 +121,12 @@ We used GitHub Copilot’s built-in GitHub integration to assist with pull reque
 
 - Tailwind CSS Documentation: [Tailwindcss](https://tailwindcss.com/docs)
   - Used extensively for styling components and building responsive layouts.
+
+- React Split Documentation: [React Split](https://uiwjs.github.io/react-split/)
+  - Used extensively for implementing split pane layouts in the code editor interface. The documentation provided examples for creating resizable panels and handling split configurations.
+
+- Monaco Editor Documentation: [Monaco Editor](https://microsoft.github.io/monaco-editor/)
+  - Used extensively for integrating the Monaco Editor (VS Code's editor) into the code execution environment. The documentation was essential for understanding editor configuration, syntax highlighting, and API integration.
 
 ## License
 
