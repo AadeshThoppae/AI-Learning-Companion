@@ -137,7 +137,7 @@ export default function InterviewTab({
     };
 
     /**
-     * helper function to effeciently set styling
+     * helper function to efficiently set styling
      * @param questionId style of question
      * @param grade grade given by user
      */
