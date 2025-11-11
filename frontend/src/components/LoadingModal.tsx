@@ -20,10 +20,7 @@ export default function LoadingModal({ isOpen, message }: LoadingModalProps) {
 	if (!isOpen) return null;
 
 	return (
-		<div
-			className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 transition-opacity duration-300 ease-in-out"
-			style={{ opacity: isOpen ? 1 : 0 }}
-		>
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 transition-opacity duration-300 ease-in-out">
 			<div className="flex flex-col items-center gap-4">
 				<div className="h-16 w-16 animate-spin rounded-full border-b-2 border-blue-500"></div>
 				<span className="text-lg text-gray-300">{message}</span>

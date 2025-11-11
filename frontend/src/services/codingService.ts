@@ -71,7 +71,7 @@ export const submitCode = async (codeSubmission: CodeSubmission): Promise<ApiRes
 	const result: ApiResponse<ExecutionResult> = await res.json();
 
 	if (!res.ok) {
-		throw new Error(result.message || "Failed to test code");
+		throw new Error(result.message || "Failed to submit code");
 	}
 
 	return result;
