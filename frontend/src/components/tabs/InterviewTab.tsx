@@ -100,6 +100,7 @@ export default function InterviewTab({
 
         if(!userAnswer || userAnswer.trim().length === 0){
             setError("Please enter your answer before submitting for grading");
+            return;
         }
 
         setGradingQuestionId(questionId);
