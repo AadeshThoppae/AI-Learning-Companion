@@ -239,7 +239,7 @@ export default function InterviewTab({
 									{!revealedAnswers.has(question.id) && (
 										<button
 											onClick={() => toggleAnswer(question.id)}
-											className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 cursor-pointer"
+											className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all transform hover:scale-105 cursor-pointer mr-4"
 										>
 											Show Perfect Answer
 										</button>
@@ -327,7 +327,7 @@ export default function InterviewTab({
 										<button
 											onClick={() => handleAiGrading(question.id)}
 											disabled={gradingQuestionId === question.id}
-											className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 cursor-pointer"
+											className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-lg hover:from-purple-600 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform hover:scale-105 cursor-pointer mr-4"
 										>
 											{gradingQuestionId === question.id ? (
 												<span className="flex items-center gap-2">
