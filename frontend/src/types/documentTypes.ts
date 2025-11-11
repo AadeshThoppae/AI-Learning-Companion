@@ -7,6 +7,39 @@ export interface Summary {
 }
 
 /**
+ * Represents a single interview question
+ */
+export interface InterviewQuestion{
+    id:number;
+    question: string;
+    answer: string;
+}
+
+/**
+ * Container for collection of interview questions
+ */
+export interface Interview{
+    questions: InterviewQuestion[];
+}
+/**
+ * Request payload for grading an interview answer
+ */
+export interface InterviewGradingRequest{
+    questionId: number;
+    userAnswer:string;
+}
+
+/**
+ * Response containing AI grading feedback
+ */
+export interface InterviewResponse{
+    userAnswer: string;
+    score: number;
+    feedback: string;
+    suggestions: string;
+    strengths: string;
+}
+/**
  * Represents a single flashcard for studying
  */
 export interface Flashcard {

@@ -1,5 +1,6 @@
 package com.aadeshandreas.ailearning.ai_learning_companion.config;
 
+import com.aadeshandreas.ailearning.ai_learning_companion.service.*;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.coding.CodingQuestionGenerator;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.coding.CodingTopicExtractor;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.generation.FlashcardGenerator;
@@ -129,6 +130,28 @@ public class LangChainConfig {
     @Bean
     public CodingQuestionGenerator codingQuestionGenerator() {
         return AiServices.create(CodingQuestionGenerator.class, geminiPro());
+    }
+
+    /**
+     * Creates the {@link com.aadeshandreas.ailearning.ai_learning_companion.service.InterviewGenerator} AI Service bean.
+     * LangChain4j will create a dynamic implementation of the InterviewGenerator interface.
+     *
+     * @return A ready-to-use instance of the InterviewGenerator service.
+     */
+    @Bean
+    public InterviewGenerator interviewGenerator() {
+        return AiServices.create(InterviewGenerator.class, geminiFlash());
+    }
+
+    /**
+     * Creates the {@link com.aadeshandreas.ailearning.ai_learning_companion.service.InterviewAnswerGrader} AI Service bean.
+     * LangChain4j will create a dynamic implementation of the InterviewAnswerGrader interface.
+     *
+     * @return A ready-to-use instance of the InterviewAnswerGrader service.
+     */
+    @Bean
+    public InterviewAnswerGrader interviewAnswerGrader() {
+        return AiServices.create(InterviewAnswerGrader.class, geminiFlash());
     }
 
 }
