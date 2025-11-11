@@ -187,7 +187,7 @@ A sophisticated coding environment with in-memory Java compilation, execution, a
 │  - Monaco Editor Integration                    │
 │  - State Management                             │
 └────────────────┬────────────────────────────────┘
-                 │ REST API
+                 │ REST API (JSON)
 ┌────────────────┴────────────────────────────────┐
 │           Backend (Spring Boot)                 │
 │                                                 │
@@ -196,6 +196,14 @@ A sophisticated coding environment with in-memory Java compilation, execution, a
 │  │  - DocumentController                   │    │
 │  │  - ContentGenerationController          │    │
 │  │  - CodingController                     │    │
+│  └──────────────┬──────────────────────────┘    │
+│                 │                               │
+│  ┌──────────────┴──────────────────────────┐    │
+│  │         Models/DTOs Layer               │    │
+│  │  - Request DTOs (DocumentUploadRequest) │    │
+│  │  - Response DTOs (ApiResponse<T>)       │    │
+│  │  - Domain Models (Summary, Quiz, etc.)  │    │
+│  │  - Code Models (CodingQuestion, etc.)   │    │
 │  └──────────────┬──────────────────────────┘    │
 │                 │                               │
 │  ┌──────────────┴──────────────────────────┐    │
