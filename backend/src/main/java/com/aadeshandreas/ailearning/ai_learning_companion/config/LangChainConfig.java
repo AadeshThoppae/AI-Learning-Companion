@@ -89,7 +89,7 @@ public class LangChainConfig {
      * LangChain4j will create a dynamic implementation of the InterviewGenerator interface.
      *
      * @param chatModel The configured {@link ChatModel} bean to use for the AI calls.
-     * @return A ready-to-use instance of the QuizGenerator service.
+     * @return A ready-to-use instance of the InterviewGenerator service.
      */
     @Bean
     public InterviewGenerator interviewGenerator(ChatModel chatModel) {
