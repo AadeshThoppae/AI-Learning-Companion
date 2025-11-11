@@ -2,19 +2,13 @@ package com.aadeshandreas.ailearning.ai_learning_companion.service;
 
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.coding.CodingQuestionRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.coding.CodingTopicRepository;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.Interview;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.InterviewGradingRequest;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.InterviewQuestion;
-import com.aadeshandreas.ailearning.ai_learning_companion.model.InterviewResponse;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.DocumentRepository;
-import com.aadeshandreas.ailearning.ai_learning_companion.repository.InterviewRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.content.FlashcardRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.content.QuizRepository;
 import com.aadeshandreas.ailearning.ai_learning_companion.repository.content.SummaryRepository;
 import dev.langchain4j.data.document.Document;
 import dev.langchain4j.data.document.loader.FileSystemDocumentLoader;
 import dev.langchain4j.data.document.parser.apache.pdfbox.ApachePdfBoxDocumentParser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,9 +34,6 @@ public class DocumentService {
     private final QuizRepository quizRepository;
     private final CodingTopicRepository codingTopicRepository;
     private final CodingQuestionRepository codingQuestionRepository;
-    private final InterviewGenerator interviewGenerator;
-    private final InterviewRepository interviewRepository;
-    private final InterviewAnswerGrader interviewAnswerGrader;
 
     /**
      * Constructs the DocumentService with all its required dependencies, which are
@@ -61,9 +52,8 @@ public class DocumentService {
             FlashcardRepository flashcardRepository,
             QuizRepository quizRepository,
             CodingTopicRepository codingTopicRepository,
-            CodingQuestionRepository codingQuestionRepository,
-            InterviewRepository interviewRepository,
-            InterviewGenerator interviewGenerator, InterviewAnswerGrader interviewAnswerGrader) {
+            CodingQuestionRepository codingQuestionRepository
+        ) {
 
         this.documentRepository = documentRepository;
         this.summaryRepository = summaryRepository;
@@ -71,9 +61,6 @@ public class DocumentService {
         this.quizRepository = quizRepository;
         this.codingTopicRepository = codingTopicRepository;
         this.codingQuestionRepository = codingQuestionRepository;
-        this.interviewGenerator = interviewGenerator;
-        this.interviewRepository = interviewRepository;
-        this.interviewAnswerGrader = interviewAnswerGrader;
     }
 
     /**
@@ -119,43 +106,5 @@ public class DocumentService {
         quizRepository.setQuiz(null);
         codingTopicRepository.setCodingTopics(null);
         codingQuestionRepository.clear();
-    }
-
-    /**
-     * Generates Interview from the currently stored document, using a cache.
-     * @return The generated or cached Interview object.
-     */
-    public Interview generateInterview(){
-        if(interviewRepository.getInterview() != null){
-            return interviewRepository.getInterview();
-        }
-
-        String docText = documentRepository.getDocumentText();
-        Interview interview = interviewGenerator.generate(docText);
-        interviewRepository.setInterview(interview);
-        return interview;
-    }
-
-    /**
-     * Grades User's interview question answer
-     * @param request contains question ID, answer to send to grader
-     * @return graded response containing score, strengths, weaknesses, etc.
-     * @throws Exception for edge case errors
-     */
-    public InterviewResponse gradeInterviewAnswer(InterviewGradingRequest request) throws Exception {
-        Interview interview = interviewRepository.getInterview();
-        System.out.println(request.getUserAnswer());
-        if(interview == null || interview.getQuestions() == null || interview.getQuestions().isEmpty()){
-            throw new Exception("No interview found! please generate Interview first");
-        }
-
-        InterviewQuestion question = interview.getQuestions().stream()
-                .filter(q -> q.getId() == request.getQuestionId())
-                .findFirst().orElseThrow();
-
-        InterviewResponse response = interviewAnswerGrader.gradeAnswer(question.getQuestion(),question.getAnswer(),request.getUserAnswer());
-
-        response.setUserAnswer(request.getUserAnswer());
-        return response;
     }
 }

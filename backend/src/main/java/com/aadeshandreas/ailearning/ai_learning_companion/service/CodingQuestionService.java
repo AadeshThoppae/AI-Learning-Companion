@@ -9,7 +9,6 @@ import com.aadeshandreas.ailearning.ai_learning_companion.repository.content.Sum
 import com.aadeshandreas.ailearning.ai_learning_companion.service.coding.CodeExecutor;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.coding.CodingQuestionGenerator;
 import com.aadeshandreas.ailearning.ai_learning_companion.service.coding.CodingTopicExtractor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +21,6 @@ public class CodingQuestionService {
     private final CodingQuestionGenerator codingQuestionGenerator;
     private final CodeExecutor codeExecutor;
 
-    @Autowired
     public CodingQuestionService(
             CodingTopicRepository codingTopicRepository,
             DocumentRepository documentRepository,

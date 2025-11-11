@@ -1,4 +1,4 @@
-import { ApiResponse, FlashcardList, QuizList, Summary } from "@/types/documentTypes";
+import { ApiResponse, FlashcardList, Interview, InterviewResponse, QuizList, Summary } from "@/types/documentTypes";
 
 /** Base URL for the API endpoints */
 export const API_BASE_URL = "http://localhost:8080";
@@ -61,6 +61,57 @@ export const getQuizzes = async (): Promise<ApiResponse<QuizList>> => {
 
 	if (!res.ok) {
 		throw new Error(result.message || "Failed to generate quizzes");
+	}
+
+	return result;
+};
+
+/**
+ * Retrieves Interview Questions from notes
+ *
+ * @return interview questions
+ */
+export const getInterviewQuestions = async (): Promise<ApiResponse<Interview>> => {
+	const res = await fetch(`${API_BASE_URL}/api/content/interview`, {
+		method: "GET",
+		credentials: "include",
+	});
+
+	const result: ApiResponse<Interview> = await res.json();
+
+	if (!res.ok) {
+		throw new Error(result.message || "Failed to generate interview");
+	}
+
+	return result;
+};
+
+/**
+ * Retrieves grading based on question and user answer
+ *
+ * @param p0 contains questionId and user's answer to question
+ * @return Interview grading response based on answer
+ */
+export const getInterviewGrading = async (p0: {
+	questionId: number;
+	userAnswer: string | undefined;
+}): Promise<ApiResponse<InterviewResponse>> => {
+	const res = await fetch(`${API_BASE_URL}/api/content/interview/grade`, {
+		method: "POST",
+		credentials: "include",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			questionId: p0.questionId,
+			userAnswer: p0.userAnswer,
+		}),
+	});
+
+	const result: ApiResponse<InterviewResponse> = await res.json();
+
+	if (!res.ok) {
+		throw new Error(result.message || "Failed to generate interview review");
 	}
 
 	return result;
