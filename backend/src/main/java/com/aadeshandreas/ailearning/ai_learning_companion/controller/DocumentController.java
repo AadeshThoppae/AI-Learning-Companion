@@ -230,10 +230,10 @@ public class DocumentController {
      * the ApiResponse's data field will contain a {@link InterviewResponse} object. On failure,
      * it will contain an error message and code with null data.
      */
-    @GetMapping(value = "/interview/grade")
-    public ResponseEntity<ApiResponse<?>> gradeInterviewAnswer(InterviewGradingRequest request) {
+    @PostMapping(value = "/interview/grade")
+    public ResponseEntity<ApiResponse<?>> gradeInterviewAnswer(@Valid @RequestBody InterviewGradingRequest request) {
         try {
-            InterviewResponse q = documentService.gradeInterviewAnswer(request.getQuestionId(),request.getUserAnswer());
+            InterviewResponse q = documentService.gradeInterviewAnswer(request);
             ApiResponse<InterviewResponse> successResponse = new ApiResponse<>("Success", "200_OK", q);
             return ResponseEntity.ok(successResponse);
         } catch (IllegalStateException e) {

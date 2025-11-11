@@ -18,8 +18,8 @@ public interface InterviewAnswerGrader extends ContentGenerator<InterviewRespons
     @UserMessage("""
             You are an expert interviewer evaluating a candidate's answer.
             
-            Question: {{answer}}
-            
+            Question: {{question}}
+            Candidate's Answer: {{userAnswer}}
             Perfect Answer(for reference): {{answer}}
             
             Please evaluate the candidate's answer and provide:
@@ -28,7 +28,7 @@ public interface InterviewAnswerGrader extends ContentGenerator<InterviewRespons
             3. Specific strengths in their response
             4. Concrete suggestions for improvement
             
-            Become encouraging but honest. Consider: 
+            Be encouraging but honest. Consider: 
             - Accuracy and completeness of concepts
             - Specific strengths in their response
             - Use of relevant examples or details

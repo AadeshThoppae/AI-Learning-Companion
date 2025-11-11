@@ -6,8 +6,9 @@ import QuizTab from "@/components/tabs/QuizTab";
 import SummaryTab from "@/components/tabs/SummaryTab";
 import Tabs from "@/components/tabs/Tabs";
 import UploadTab from "@/components/tabs/UploadTab";
-import { Flashcard, Quiz, Summary } from "@/types/documentTypes";
+import {Flashcard, InterviewQuestion, Quiz, Summary} from "@/types/documentTypes";
 import { useState} from "react";
+import InterviewTab from "@/components/tabs/InterviewTab";
 
 /**
  * Home component - Main page of the AI Learning Companion application
@@ -25,8 +26,9 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('Upload');
     const [error, setError] = useState<string>('');
+    const[interview, setInterview] = useState<InterviewQuestion[] | null>(null);
 
-    const tabs = ['Upload','Summary','Flashcards', 'Quiz'];
+    const tabs = ['Upload','Summary','Flashcards', 'Quiz', 'Interview'];
 
     /**
      * Resets all application state to initial values
@@ -110,6 +112,16 @@ export default function Home() {
                     setError={setError}
                     setActiveTab={setActiveTab}
                     setQuizzes={setQuizzes}
+                />
+            )}
+
+            {activeTab === 'Interview' && (
+                <InterviewTab
+                    interview={interview}
+                    handleReset={handleReset}
+                    setError={setError}
+                    setActiveTab={setActiveTab}
+                    setInterview={setInterview}
                 />
             )}
        </div>
