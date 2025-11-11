@@ -51,17 +51,27 @@ public interface CodingQuestionGenerator {
                - Method should be public and static for easy testing
                - Example: "public static boolean isValid(String s)"
 
+            <starterCode>
             5. Starter Code: CRITICAL - TEMPLATE ONLY - DO NOT IMPLEMENT THE SOLUTION
                - Include method signature with empty body or simple return statement
                - Add TODO comments as hints
                - The actual solution logic must be MISSING - students will implement it
-               - Example:
+
+               WRONG (has complete solution):
                  public class Solution {
-                     public static boolean isValid(String s) {
+                     public static boolean isPalindrome(String s) {
+                         return s.equals(new StringBuilder(s).reverse().toString());
+                     }
+                 }
+
+               RIGHT (incomplete template):
+                 public class Solution {
+                     public static boolean isPalindrome(String s) {
                          // TODO: Implement your solution here
                          return false;
                      }
                  }
+            </starterCode>
 
             6. Test Cases: Create exactly 5 test cases:
                - First 2 test cases: Set hidden = false (these are shown to the user as examples)
@@ -101,28 +111,30 @@ public interface CodingQuestionGenerator {
             - The method signature should match what's used in the starter code
             - ALWAYS follow the input format rules above - this is critical for automated testing
 
+            <forbidden>
             LIMITATIONS - YOU MUST STRICTLY AVOID:
             FORBIDDEN: Custom test harnesses or operation sequences as inputs
             FORBIDDEN: Input formats like: Operations: ["insert", "delete"], Arguments: [[1], [2]]
             FORBIDDEN: Problems requiring step-by-step operation sequences
             FORBIDDEN: Simulating specific thread interleavings or timing-dependent behavior
-            
+
             ALLOWED for concurrency: Simple direct parameters like:
                - CountDownLatch(int count) -> simple constructor test
                - increment() with no parameters -> simple method test
                - Thread-safe counter classes with getValue() methods
                - Blocking queue operations with simple put/take
-            
+
             CRITICAL: Test inputs MUST be simple comma-separated values only.
             Examples of VALID inputs:
             - "5, 10" (two integers)
             - "[1, 2, 3], 5" (array and integer)
             - "\"hello\", true" (string and boolean)
-            
+
             Examples of INVALID inputs (NEVER generate these):
             - Operations: ["enqueue", "dequeue"], Arguments: [[1], []]
             - ["INSERT", "GET"], [[key, value], [key]]
             - Any JSON-like nested structure with operation sequences
+            </forbidden>
 
             VALIDATION - Verify before submitting:
             - Use ONLY standard Java API methods (no hallucinated method names)
@@ -132,9 +144,11 @@ public interface CodingQuestionGenerator {
             - Problem is testable with simple parameter-based inputs
             - NO operation sequence patterns whatsoever
 
+            <outputFormat>
             OUTPUT FORMAT - CRITICAL:
             Return ONLY the raw JSON object. Do NOT wrap it in markdown code blocks.
             Do NOT use ```json or ``` markers. Return pure JSON starting with { and ending with }.
+            </outputFormat>
 
             Generate the complete coding question now.
             """)
